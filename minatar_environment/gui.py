@@ -52,7 +52,8 @@ class GUI:
         self.ax = self.fig.add_subplot(111)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)
         self.canvas.get_tk_widget().pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
-        self.default_key_handler = self.canvas.mpl_connect('key_press_event', self.on_key_event)
+        self.key_press_handler = self.canvas.mpl_connect('key_press_event', self.on_key_event)
+        self.key_release_handler = self.canvas.mpl_connect('key_press_event', lambda x: None)
 
     # Set the message for the label on screen
     def set_message(self, str):
@@ -67,9 +68,13 @@ class GUI:
         self.canvas.draw()
 
     # Allow user to handle their own keyboard input
-    def overwrite_key_handle(self, key_handler):
-        self.canvas.mpl_disconnect(self.default_key_handler)
-        self.canvas.mpl_connect('key_press_event', key_handler)
+    def overwrite_key_handle(self, key_press_handler, key_release_handler=None):
+        self.canvas.mpl_disconnect(self.key_press_handler)
+        self.key_press_handler = self.canvas.mpl_connect('key_press_event', key_press_handler)
+        if(key_release_handler is not None):
+            self.canvas.mpl_disconnect(self.key_release_handler)
+            self.key_release_handler = self.canvas.mpl_connect('key_release_event', key_release_handler)
+
 
     # Default key handler
     def on_key_event(self, event):
