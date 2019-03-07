@@ -29,7 +29,7 @@ enemy_shot_interval = 10
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = True):
+    def __init__(self, ramping = True, seed = None):
         self.channels ={
             'cannon':0,
             'alien':1,
@@ -40,6 +40,7 @@ class Env:
         }
         self.action_map = ['n','l','u','r','d','f']
         self.ramping = ramping
+        self.random = np.random.RandomState(seed)
         self.reset()
 
     # Update environment according to agent action
@@ -48,10 +49,7 @@ class Env:
         if(self.terminal):
             return r, self.terminal
 
-        if(np.random.rand()>0.1):
-            a = self.action_map[a]
-        else:
-            a = self.last_action
+        a = self.action_map[a]
 
         # Resolve player action
         if(a=='f' and self.shot_timer == 0):
@@ -106,8 +104,6 @@ class Env:
                 self.enemy_move_interval-=1
                 self.ramp_index+=1
             self.alien_map[0:4,2:8] = 1
-
-        self.last_action = a
         return r, self.terminal
 
     # Find the alien closest to player in manhattan distance, currently used to decide which alien shoots
@@ -149,7 +145,6 @@ class Env:
         self.alien_shot_timer = enemy_shot_interval
         self.ramp_index = 0
         self.shot_timer = 0
-        self.last_action = 0
         self.terminal = False
 
     # Dimensionality of the game-state (10x10xn)

@@ -28,7 +28,7 @@ time_limit = 2500
 #
 #####################################################################################################################
 class Env:
-    def __init__(self):
+    def __init__(self, ramping = None, seed = None):
         self.channels ={
             'chicken':0,
             'car':1,
@@ -39,6 +39,7 @@ class Env:
             'speed5':6,
         }
         self.action_map = ['n','l','u','r','d','f']
+        self.random = np.random.RandomState(seed)
         self.reset()
 
     # Update environment according to agent action
@@ -47,10 +48,7 @@ class Env:
         if(self.terminal):
             return r, self.terminal
             
-        if(np.random.rand()>0.1):
-            a = self.action_map[a]
-        else:
-            a = self.last_action
+        a = self.action_map[a]
 
         if(a=='u' and self.move_timer==0):
             self.move_timer = player_speed
@@ -86,7 +84,6 @@ class Env:
         self.terminate_timer-=1
         if(self.terminate_timer<0):
             self.terminal = True
-        self.last_action = a
         return r, self.terminal
 
     # Query the current level of the difficulty ramp, difficulty does not ramp in this game, so return None
@@ -119,8 +116,8 @@ class Env:
 
     # Randomize car speeds and directions, also reset their position if initialize=True
     def _randomize_cars(self, initialize=False):
-        speeds = np.random.randint(1,6,8)
-        directions = np.random.choice([-1,1],8)
+        speeds = self.random.randint(1,6,8)
+        directions = self.random.choice([-1,1],8)
         speeds*=directions
         if(initialize):
             self.cars = []
@@ -136,7 +133,6 @@ class Env:
         self.pos = 9
         self.move_timer = player_speed
         self.terminate_timer = time_limit
-        self.last_action = 0
         self.terminal = False
 
     # Dimensionality of the game-state (10x10xn)

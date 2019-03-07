@@ -40,7 +40,7 @@ diver_move_interval = 5
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = True):
+    def __init__(self, ramping = True, seed = None):
         self.channels ={
             'sub_front':0,
             'sub_back':1,
@@ -55,6 +55,7 @@ class Env:
         }
         self.action_map = ['n','l','u','r','d','f']
         self.ramping = ramping
+        self.random = np.random.RandomState(seed)
         self.reset()
 
     # Update environment according to agent action
@@ -63,10 +64,7 @@ class Env:
         if(self.terminal):
             return r, self.terminal
             
-        if(np.random.rand()>0.1):
-            a = self.action_map[a]
-        else:
-            a = self.last_action
+        a = self.action_map[a]
 
         # Spawn enemy if timer is up
         if(self.e_spawn_timer==0):
@@ -203,8 +201,6 @@ class Env:
                     self.terminal = True
                 else:
                     r+=self._surface()
-
-        self.last_action = a
         return r, self.terminal
 
     # Called when player hits surface (top row) if they have no divers, this ends the game, 
@@ -230,10 +226,10 @@ class Env:
     # Spawn an enemy fish or submarine in random row and random direction,
     # if the resulting row and direction would lead to a collision, do nothing instead
     def _spawn_enemy(self):
-        lr = np.random.choice([True,False])
-        is_sub = np.random.choice([True,False], p=[1/3,2/3])
+        lr = self.random.choice([True,False])
+        is_sub = self.random.choice([True,False], p=[1/3,2/3])
         x = 0 if lr else 9
-        y = np.random.choice(np.arange(1,9))
+        y = self.random.choice(np.arange(1,9))
 
         # Do not spawn in same row an opposite direction as existing
         if(any([z[1]==y and z[2]!=lr for z in self.e_subs+self.e_fish])):
@@ -245,9 +241,9 @@ class Env:
 
     # Spawn a diver in random row with random direction
     def _spawn_diver(self):
-        lr = np.random.choice([True,False])
+        lr = self.random.choice([True,False])
         x = 0 if lr else 9
-        y = np.random.choice(np.arange(1,9))
+        y = self.random.choice(np.arange(1,9))
         self.divers+=[[x,y,lr,diver_move_interval]]
 
     # Query the current level of the difficulty ramp, could be used as additional input to agent for example
@@ -304,7 +300,6 @@ class Env:
         self.ramp_index = 0
         self.shot_timer = 0
         self.surface = True
-        self.last_action = 0
         self.terminal = False
 
     # Dimensionality of the game-state (10x10xn)

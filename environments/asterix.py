@@ -26,7 +26,7 @@ shot_cool_down = 5
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = True):
+    def __init__(self, ramping = True, seed = None):
         self.channels ={
             'player':0,
             'enemy':1,
@@ -35,6 +35,7 @@ class Env:
         }
         self.action_map = ['n','l','u','r','d','f']
         self.ramping = ramping
+        self.random = np.random.RandomState(seed)
         self.reset()
 
     # Update environment according to agent action
@@ -43,10 +44,7 @@ class Env:
         if(self.terminal):
             return r, self.terminal
             
-        if(np.random.rand()>0.1):
-            a = self.action_map[a]
-        else:
-            a = self.last_action
+        a = self.action_map[a]
 
         # Spawn enemy if timer is up
         if(self.spawn_timer==0):
@@ -104,18 +102,17 @@ class Env:
                     self.spawn_speed-=1
                 self.ramp_index+=1
                 self.ramp_timer=ramp_interval
-        self.last_action = a
         return r, self.terminal
 
     # Spawn a new enemy or treasure at a random location with random direction (if all rows are filled do nothing)
     def _spawn_entity(self):
-        lr = np.random.choice([True,False])
-        is_gold = np.random.choice([True,False], p=[1/3,2/3])
+        lr = self.random.choice([True,False])
+        is_gold = self.random.choice([True,False], p=[1/3,2/3])
         x = 0 if lr else 9
         slot_options = [i for i in range(len(self.entities)) if self.entities[i]==None]
         if(not slot_options):
             return
-        slot = np.random.choice(slot_options)
+        slot = self.random.choice(slot_options)
         self.entities[slot] = [x,slot+1,lr,is_gold]
 
     # Query the current level of the difficulty ramp, could be used as additional input to agent for example
@@ -147,7 +144,6 @@ class Env:
         self.move_timer = self.move_speed
         self.ramp_timer = ramp_interval
         self.ramp_index = 0
-        self.last_action = 0
         self.terminal = False
 
     # Dimensionality of the game-state (10x10xn)

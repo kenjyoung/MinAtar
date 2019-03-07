@@ -17,7 +17,7 @@ import numpy as np
 #
 #####################################################################################################################
 class Env:
-    def __init__(self):
+    def __init__(self, ramping = None, seed = None):
         self.channels ={
             'paddle':0,
             'ball':1,
@@ -25,6 +25,7 @@ class Env:
             'brick':3,
         }
         self.action_map = ['n','l','u','r','d','f']
+        self.random = np.random.RandomState(seed)
         self.reset()
 
     # Update environment according to agent action
@@ -33,10 +34,7 @@ class Env:
         if(self.terminal):
             return r, self.terminal
             
-        if(np.random.rand()>0.1):
-            a = self.action_map[a]
-        else:
-            a = self.last_action
+        a = self.action_map[a]
 
         # Resolve player action
         if(a=='l'):
@@ -95,7 +93,6 @@ class Env:
 
         self.ball_x = new_x
         self.ball_y = new_y
-        self.last_action = a
         return r, self.terminal
 
     # Query the current level of the difficulty ramp, difficulty does not ramp in this game, so return None
@@ -114,12 +111,11 @@ class Env:
     # Reset to start state for new episode
     def reset(self):
         self.ball_y = 3
-        ball_start = np.random.choice(2)
+        ball_start = self.random.choice(2)
         self.ball_x, self.ball_dir = [(0,2),(9,3)][ball_start]
         self.pos = 4
         self.brick_map = np.zeros((10,10))
         self.brick_map[1:4,:] = 1
-        self.last_action = 0
         self.strike = False
         self.last_x = self.ball_x
         self.last_y = self.ball_y

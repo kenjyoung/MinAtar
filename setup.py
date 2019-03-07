@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='MinAtar',
-      version='1.0',
+      version='1.0.1',
       description='A miniaturized version of the arcade learning environment.',
       url='https://github.com/kenjyoung/MinAtar',
       author='Kenny Young',
