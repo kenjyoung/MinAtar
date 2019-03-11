@@ -1,26 +1,48 @@
 # MinAtar
-MinAtar is a testbed for AI agents which implements miniaturized version of several Atari 2600 games. MinAtar is inspired by the Arcade Learning Environment (https://arxiv.org/abs/1207.4708) but simplifies the games to make experimentation with the environments more accessible and efficient. Currently, MinAtar provides analogues to five Atari games which play out on a 10x10 grid. The environments provide a 10x10xn state representation, where each of the n channels correspond to game-specific objects, such as ball, paddle and brick in the game Breakout.
+MinAtar is a testbed for AI agents which implements miniaturized version of several Atari 2600 games. MinAtar is inspired by the Arcade Learning Environment (Bellemare et. al. 2013), but simplifies the games to make experimentation with the environments more accessible and efficient. Currently, MinAtar provides analogues to five Atari games which play out on a 10x10 grid. The environments provide a 10x10xn state representation, where each of the n channels correspond to game-specific objects, such as ball, paddle and brick in the game Breakout.
+
+<p  align="center">
+<img src="img/seaquest.gif" width="200" />
+<img src="img/breakout.gif" width="200" />
+</p>
+<p  align="center">
+<img src="img/asterix.gif" width="200" />
+<img src="img/freeway.gif" width="200" />
+<img src="img/space_invaders.gif" width="200" />
+</p>
 
 ## Quick Start
 MinAtar consists of a python3 package, to use MinAtar you must first install numpy. If you wish to visualize the game play (for example to play as a human) you must also install the packages seaborn and matplotlib. The included  DQN and AC_lambda examples are written using pytorch, and thus also require the torch package to run.
 
 To install MinAtar simply do:
 
+```bash
 pip3 install .
+```
 
 in the home directory
 
 See examples/random_play.py for a simple example of how to use the module. To run this script do: 
 
-python3 random_play.py -g \<game\> 
+```bash
+python3 random_play.py -g <game> 
+```
 
-where \<game\> is one of the available games (currently asterix, breakout, freeway, seaquest and space_invaders). This will simply run 1000 episodes with a random policy and report the mean and standard error in the resulting returns.
+where `<game>` is one of the available games: asterix, breakout, freeway, seaquest and space_invaders. See the Games section below for details of each game. random_play.py will run 1000 episodes with a random policy and report the mean and standard error in the resulting returns.
 
-To play a game as a human use examples/human_play.py. To run this script do:
+To play a game as a human, run examples/human_play.py as follows:
 
-python3 human_play.py -g \<game\>
+```bash
+python3 human_play.py -g <game>
+```
+Use the arrow keys to move and space bar to fire. Also press q to quit and r to reset.
 
 Also included in the examples directory are example implementations of DQN and online actor-critic with eligibility traces.
+
+## Results
+The following plots display results for DQN (Mnih et al., 2015) and actor-critic with eligibility traces. Our DQN agent uses a significantly smaller network. We perform an ablation study of DQN, and display results for variants without experience replay, and without a seperate target network. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176).
+
+<img align="center" src="img/results.gif" width=800>
 
 ## Games
 So far we have implemented analogues to five Atari games in MinAtar as follows. For each game we include a link to a video of a trained DQN agent playing.
@@ -49,6 +71,28 @@ The player controls a submarine consisting of two cells, front and back, to allo
 The player controls a cannon at the bottom of the screen and can shoot bullets upward at a cluster of aliens above. The aliens move across the screen until one of them hits the edge, at which point they all move down and switch directions. The current alien direction is indicated by 2 channels (one for left and one for right) one of which is active at the location of each alien. A reward of +1 is given each time an alien is shot, and that alien is also removed. The aliens will also shoot bullets back at the player. When few aliens are left, alien speed will begin to increase. When only one alien is left, it will move at one cell per frame. When a wave of aliens is fully cleared, a new one will spawn which moves at a slightly faster speed than the last. Termination occurs when an alien or bullet hits the player.
 
 [Video](https://www.youtube.com/watch?v=W-9Ru-RDEoI)
+
+## Citing MinAtar
+If you use MinAtar in your research please cite the following:
+
+Young, K. Tian, T. (2019). MinAtar: An Atari-inspired Testbed for More Efficient Reinforcement Learning Experiments.  *arXiv preprint arXiv:1903.03176*.
+
+In BibTeX format:
+
+```
+@Article{young19minatar,
+author = {{Young}, K. and {Tian}, T.},
+title = {MinAtar: An Atari-inspired Testbed for More Efficient Reinforcement Learning Experiments},
+journal = {arXiv preprint arXiv:1903.03176},
+year = "2019"
+}
+```
+
+
+## References
+Bellemare, M. G., Naddaf, Y., Veness, J., & Bowling, M. (2013). The arcade learning environment: An evaluation platform for general agents. *Journal of Artificial Intelligence Research*, 47, 253–279.
+
+Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A. A., Veness, J., Bellemare, M. G., . . . others (2015). Human-level control through deep reinforcement learning. *Nature*, 518(7540), 529.
 
 ## License
 This program is free software: you can redistribute it and/or modify
