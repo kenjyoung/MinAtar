@@ -81,7 +81,7 @@ In BibTeX format:
 
 ```
 @Article{young19minatar,
-author = {{Young}, K. and {Tian}, T.},
+author = {{Young}, Kenny and {Tian}, Tian},
 title = {MinAtar: An Atari-inspired Testbed for More Efficient Reinforcement Learning Experiments},
 journal = {arXiv preprint arXiv:1903.03176},
 year = "2019"
