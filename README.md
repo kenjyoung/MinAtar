@@ -29,7 +29,7 @@ pip install -r requirements.txt
 python setup.py install
 # Ensure installation success
 python examples/random_play.py -g breakout
-# It should run for a bit and then you should see an output:
+# It should run for a bit and then you should see an output similar to:
 # Avg Return: 0.5+/-0.023194827009486406
 ```
 
