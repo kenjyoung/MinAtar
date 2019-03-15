@@ -17,7 +17,7 @@ MinAtar consists of a python3 package, to use MinAtar follow the installation in
 To install MinAtar simply:
 
 ```bash
-git clone https://github.com/korymath/MinAtar.git
+git clone https://github.com/kenjyoung/MinAtar.git
 # Configure a virtual environment
 python3 -m venv venv
 source venv/bin/activate
