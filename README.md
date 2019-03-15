@@ -14,18 +14,29 @@ MinAtar is a testbed for AI agents which implements miniaturized version of seve
 ## Quick Start
 MinAtar consists of a python3 package, to use MinAtar you must first install numpy. If you wish to visualize the game play (for example to play as a human) you must also install the packages seaborn and matplotlib. The included  DQN and AC_lambda examples are written using pytorch, and thus also require the torch package to run.
 
-To install MinAtar simply do:
+To install MinAtar simply:
 
 ```bash
-pip3 install .
+git clone https://github.com/korymath/MinAtar.git
+# Configure a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+# Upgrade Pip
+pip install --upgrade pip
+# Install requirements
+pip install -r requirements.txt
+# Install
+python setup.py install
+# Ensure installation success
+python examples/random_play.py -g breakout
+# It should run for a bit and then you should see an output:
+# Avg Return: 0.5+/-0.023194827009486406
 ```
 
-in the home directory
-
-See examples/random_play.py for a simple example of how to use the module. To run this script do: 
+See examples/random_play.py for a simple example of how to use the module. To run this script do:
 
 ```bash
-python3 random_play.py -g <game> 
+python random_play.py -g <game>
 ```
 
 where `<game>` is one of the available games: asterix, breakout, freeway, seaquest and space_invaders. See the Games section below for details of each game. random_play.py will run 1000 episodes with a random policy and report the mean and standard error in the resulting returns.
