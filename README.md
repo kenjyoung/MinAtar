@@ -12,20 +12,31 @@ MinAtar is a testbed for AI agents which implements miniaturized version of seve
 </p>
 
 ## Quick Start
-MinAtar consists of a python3 package, to use MinAtar you must first install numpy. If you wish to visualize the game play (for example to play as a human) you must also install the packages seaborn and matplotlib. The included  DQN and AC_lambda examples are written using pytorch, and thus also require the torch package to run.
+MinAtar consists of a python3 package, to use MinAtar follow the installation instructions. The included `DQN` and `AC_lambda` examples are written using `PyTorch`.
 
-To install MinAtar simply do:
+To install MinAtar simply:
 
 ```bash
-pip3 install .
+git clone https://github.com/kenjyoung/MinAtar.git
+# Configure a virtual environment (optional)
+python3 -m venv venv
+source venv/bin/activate
+# Upgrade Pip
+pip install --upgrade pip
+# Install requirements
+pip install -r requirements.txt
+# Install
+python setup.py install
+# Ensure installation success
+python examples/random_play.py -g breakout
+# It should run for a bit and then you should see an output similar to:
+# Avg Return: 0.5+/-0.023194827009486406
 ```
 
-in the home directory
-
-See examples/random_play.py for a simple example of how to use the module. To run this script do: 
+See examples/random_play.py for a simple example of how to use the module. To run this script do:
 
 ```bash
-python3 random_play.py -g <game> 
+python random_play.py -g <game>
 ```
 
 where `<game>` is one of the available games: asterix, breakout, freeway, seaquest and space_invaders. See the Games section below for details of each game. random_play.py will run 1000 episodes with a random policy and report the mean and standard error in the resulting returns.
@@ -33,7 +44,7 @@ where `<game>` is one of the available games: asterix, breakout, freeway, seaque
 To play a game as a human, run examples/human_play.py as follows:
 
 ```bash
-python3 human_play.py -g <game>
+python human_play.py -g <game>
 ```
 Use the arrow keys to move and space bar to fire. Also press q to quit and r to reset.
 
