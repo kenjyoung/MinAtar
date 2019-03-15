@@ -18,7 +18,7 @@ To install MinAtar simply:
 
 ```bash
 git clone https://github.com/kenjyoung/MinAtar.git
-# Configure a virtual environment
+# Configure a virtual environment (optional)
 python3 -m venv venv
 source venv/bin/activate
 # Upgrade Pip
