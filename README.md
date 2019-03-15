@@ -12,7 +12,7 @@ MinAtar is a testbed for AI agents which implements miniaturized version of seve
 </p>
 
 ## Quick Start
-MinAtar consists of a python3 package, to use MinAtar you must first install numpy. If you wish to visualize the game play (for example to play as a human) you must also install the packages seaborn and matplotlib. The included  DQN and AC_lambda examples are written using pytorch, and thus also require the torch package to run.
+MinAtar consists of a python3 package, to use MinAtar follow the installation instructions. The included `DQN` and `AC_lambda` examples are written using `PyTorch`.
 
 To install MinAtar simply:
 
@@ -44,7 +44,7 @@ where `<game>` is one of the available games: asterix, breakout, freeway, seaque
 To play a game as a human, run examples/human_play.py as follows:
 
 ```bash
-python3 human_play.py -g <game>
+python human_play.py -g <game>
 ```
 Use the arrow keys to move and space bar to fire. Also press q to quit and r to reset.
 
