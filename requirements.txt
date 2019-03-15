@@ -1,7 +1,6 @@
 cycler==0.10.0
 kiwisolver==1.0.1
 matplotlib==3.0.3
-MinAtar==1.0.1
 numpy==1.16.2
 pandas==0.24.2
 pyparsing==2.3.1
