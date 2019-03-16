@@ -12,34 +12,40 @@ MinAtar is a testbed for AI agents which implements miniaturized version of seve
 </p>
 
 ## Quick Start
-MinAtar consists of a python3 package, to use MinAtar follow the installation instructions. The included `DQN` and `AC_lambda` examples are written using `PyTorch`.
+To use MinAtar, you need python3 installed, make sure pip is also up to date.  To run the included `DQN` and `AC_lambda` examples, you need `PyTorch`.  To install MinAtar, please follow the steps below:
 
-To install MinAtar simply:
-
+1. Clone the repo: 
 ```bash
 git clone https://github.com/kenjyoung/MinAtar.git
-# Configure a virtual environment (optional)
+```
+If you prefer running MinAtar in a virtualenv, you can do the following before steps 2 and 3:
+```bash
 python3 -m venv venv
 source venv/bin/activate
 # Upgrade Pip
 pip install --upgrade pip
-# Install requirements
-pip install -r requirements.txt
-# Install
-python setup.py install
-# Ensure installation success
-python examples/random_play.py -g breakout
-# It should run for a bit and then you should see an output similar to:
-# Avg Return: 0.5+/-0.023194827009486406
 ```
 
-See examples/random_play.py for a simple example of how to use the module. To run this script do:
-
+2.  Install all dependencies and requirements:
 ```bash
-python random_play.py -g <game>
+pip install -r requirements.txt
 ```
 
-where `<game>` is one of the available games: asterix, breakout, freeway, seaquest and space_invaders. See the Games section below for details of each game. random_play.py will run 1000 episodes with a random policy and report the mean and standard error in the resulting returns.
+3.  Install MinAtar:
+```bash
+python setup.py install
+```
+
+To verify whether if the installation is successful, run
+```bash
+python examples/random_play.py -g breakout
+```
+The program will run 1000 episodes with a random policy and report the mean and standard error in the resulting returns similar to:
+```bash
+Avg Return: 0.5+/-0.023194827009486406
+```
+
+The examples/random_play.py is a simple example to demonstrate how to use the module. `breakout` in the previous command can be replaced by one of the five available games: asterix, breakout, freeway, seaquest and space_invaders. See the Games section below for details of each game.
 
 To play a game as a human, run examples/human_play.py as follows:
 
@@ -48,7 +54,7 @@ python human_play.py -g <game>
 ```
 Use the arrow keys to move and space bar to fire. Also press q to quit and r to reset.
 
-Also included in the examples directory are example implementations of DQN and online actor-critic with eligibility traces.
+Also included in the examples directory are example implementations of DQN (dqn.py) and online actor-critic with eligibility traces (AC_lambda.py).
 
 ## Results
 The following plots display results for DQN (Mnih et al., 2015) and actor-critic with eligibility traces. Our DQN agent uses a significantly smaller network. We perform an ablation study of DQN, and display results for variants without experience replay, and without a seperate target network. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176).
