@@ -48,3 +48,6 @@ class Environment:
 
     def game_name(self):
         return self.env_name
+
+    def minimal_action_set(self):
+        return self.env.minimal_action_set()

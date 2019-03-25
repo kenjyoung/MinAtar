@@ -150,3 +150,7 @@ class Env:
     # Dimensionality of the game-state (10x10xn)
     def state_shape(self):
         return [10,10,len(self.channels)]
+
+    def minimal_action_set(self):
+        minimal_actions = ['n','l','r','f']
+        return [self.action_map.index(x) for x in minimal_actions]
