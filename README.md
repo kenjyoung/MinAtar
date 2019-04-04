@@ -26,12 +26,7 @@ source venv/bin/activate
 pip install --upgrade pip
 ```
 
-2.  Install all dependencies and requirements:
-```bash
-pip install -r requirements.txt
-```
-
-3.  Install MinAtar:
+2.  Install MinAtar:
 ```bash
 python setup.py install
 ```
