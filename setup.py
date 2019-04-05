@@ -9,10 +9,6 @@ setup(
     author_email='kjyoung@ualberta.com',
     license='GPL',
     packages=['minatar', 'minatar.environments'],
-    package_dir={
-        'minatar': 'minatar_environment',
-        'minatar.environments': 'environments'
-    },
     install_requires=[
         'cycler>=0.10.0',
         'kiwisolver>=1.0.1',
