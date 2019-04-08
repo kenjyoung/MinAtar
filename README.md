@@ -18,7 +18,7 @@ To use MinAtar, you need python3 installed, make sure pip is also up to date.  T
 ```bash
 git clone https://github.com/kenjyoung/MinAtar.git
 ```
-If you prefer running MinAtar in a virtualenv, you can do the following before steps 2 and 3:
+If you prefer running MinAtar in a virtualenv, you can do the following before step 2:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
@@ -28,10 +28,14 @@ pip install --upgrade pip
 
 2.  Install MinAtar:
 ```bash
-python setup.py install
+pip install .
+```
+If you have any issues with automatic dependency installation, you can instead install the nessesary dependencies manually and run
+```bash
+pip install . --no-deps
 ```
 
-To verify whether if the installation is successful, run
+To verify the installation is successful, run
 ```bash
 python examples/random_play.py -g breakout
 ```
