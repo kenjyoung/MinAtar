@@ -22,6 +22,8 @@ class Environment:
         self.n_channels = self.env.state_shape()[2]
         self.sticky_action_prob = sticky_action_prob
         self.last_action = 0
+        self.visualized = False
+        self.closed = False
 
     # Wrapper for env.act
     def act(self, a):
@@ -46,8 +48,43 @@ class Environment:
     def num_actions(self):
         return 6
 
+    # Name of the MinAtar game associated with this environment
     def game_name(self):
         return self.env_name
 
+    # Wrapper for env.minimal_action_set
     def minimal_action_set(self):
         return self.env.minimal_action_set()
+
+    # Display the current environment state for time milliseconds using matplotlib
+    def display_state(self, time=50):
+        if(not self.visualized):
+            global plt
+            global colors
+            global sns
+            mpl = __import__('matplotlib.pyplot', globals(), locals())
+            plt = mpl.pyplot
+            mpl = __import__('matplotlib.colors', globals(), locals())
+            colors = mpl.colors
+            sns = __import__('seaborn', globals(), locals())
+            self.cmap = sns.color_palette("cubehelix", self.n_channels)
+            self.cmap.insert(0,(0,0,0))
+            self.cmap=colors.ListedColormap(self.cmap)
+            bounds = [i for i in range(self.n_channels+2)]
+            self.norm = colors.BoundaryNorm(bounds, self.n_channels+1)
+            _, self.ax = plt.subplots(1,1)
+            plt.show(block=False)
+            self.visualized = True
+        if(self.closed):
+            _, self.ax = plt.subplots(1,1)
+            plt.show(block=False)
+            self.closed = False
+        state = self.env.state()
+        numerical_state = np.amax(state*np.reshape(np.arange(self.n_channels)+1,(1,1,-1)),2)+0.5
+        self.ax.imshow(numerical_state, cmap=self.cmap, norm=self.norm, interpolation='none')
+        plt.pause(time/1000)
+        plt.cla()
+
+    def close_display(self):
+        plt.close()
+        self.closed = True

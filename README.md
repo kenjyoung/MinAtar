@@ -30,7 +30,7 @@ pip install --upgrade pip
 ```bash
 pip install .
 ```
-If you have any issues with automatic dependency installation, you can instead install the nessesary dependencies manually and run
+If you have any issues with automatic dependency installation, you can instead install the necessary dependencies manually and run
 ```bash
 pip install . --no-deps
 ```
@@ -55,8 +55,48 @@ Use the arrow keys to move and space bar to fire. Also press q to quit and r to 
 
 Also included in the examples directory are example implementations of DQN (dqn.py) and online actor-critic with eligibility traces (AC_lambda.py).
 
+## Visualizing the Environments
+We provide 2 ways to visualize a MinAtar environment.
+### Using Environment.display_state()
+The Environment class includes a simple visualizer using matplotlib in the display_state function. To use this simply call:
+```python
+env.display_state(50)
+```
+where env is an instance of MinAtar.Environment. The argument is the number of milliseconds to display the state before continuing execution. To close the resulting display window call:
+```python
+env.close_display()
+```
+This is the simplest way to visualize the environments, unless you need to handle user input during execution in which case you could use the provided GUI class.
+
+
+### Using GUI class
+We also include a slightly more complex GUI for visualize the environments and optionally handle user input. This GUI is used in examples/human_play.py to play as a human and examples/agent_play.py to visualize the performance of trained agents. To use the GUI you can import it in your code with:
+```python
+from minatar import GUI
+```
+Initialize an instance of the GUI class by providing a name for the window, and the integer number of input channels for the minatar environment to be visualized. For example:
+```python
+GUI(env.game_name(), env.n_channels)
+
+```
+where env is an instance of minatar.Environment. The recommended way to use the GUI for visualizing an environment is to include all you're agent-environment interaction code in a function that looks something like this:
+```python
+def func():
+    gui.display_state(env.state())
+    #One step of agent-environment interaction here
+    gui.update(50, func)
+```
+The first argument to gui.update is the time to hold the current frame before continuing. The second argument specifies the function to call after that time has elapsed. In the example above the call to update simply calls func again, effectively continuing the agent-environment interaction loop. Note that this is not a recursive call, as the call to func in update is made in a new thread, while the execution of the current thread continues.
+
+To begin the execution you can use:
+```python
+gui.update(0, func)
+gui.run()
+```
+This will enter the agent environment interaction loop and then run the GUI thread, gui.run() will block until gui.quit() is called. To handle user input you can use gui.overwrite_key_handle(on_key_event, on_release_event). The arguments are functions to be called whenever a key is pressed, and released respectively. For an example of how to do this see examples/human_play.py.
+
 ## Results
-The following plots display results for DQN (Mnih et al., 2015) and actor-critic with eligibility traces. Our DQN agent uses a significantly smaller network. We perform an ablation study of DQN, and display results for variants without experience replay, and without a seperate target network. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176).
+The following plots display results for DQN (Mnih et al., 2015) and actor-critic with eligibility traces. Our DQN agent uses a significantly smaller network. We perform an ablation study of DQN, and display results for variants without experience replay, and without a separate target network. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176).
 
 <img align="center" src="img/results.gif" width=800>
 
@@ -91,14 +131,14 @@ The player controls a cannon at the bottom of the screen and can shoot bullets u
 ## Citing MinAtar
 If you use MinAtar in your research please cite the following:
 
-Young, K. Tian, T. (2019). MinAtar: An Atari-inspired Testbed for More Efficient Reinforcement Learning Experiments.  *arXiv preprint arXiv:1903.03176*.
+Young, K. Tian, T. (2019). MinAtar: MinAtar: An Atari-Inspired Testbed for Thorough and Reproducible Reinforcement Learning Experiments.  *arXiv preprint arXiv:1903.03176*.
 
 In BibTeX format:
 
 ```
 @Article{young19minatar,
 author = {{Young}, Kenny and {Tian}, Tian},
-title = {MinAtar: An Atari-inspired Testbed for More Efficient Reinforcement Learning Experiments},
+title = {MinAtar: An Atari-Inspired Testbed for Thorough and Reproducible Reinforcement Learning Experiments},
 journal = {arXiv preprint arXiv:1903.03176},
 year = "2019"
 }

@@ -306,6 +306,7 @@ class Env:
     def state_shape(self):
         return [10,10,len(self.channels)]
 
+    # Subset of actions that actually have a unique impact in this environment
     def minimal_action_set(self):
         minimal_actions = ['n','l','u','r','d','f']
         return [self.action_map.index(x) for x in minimal_actions]
