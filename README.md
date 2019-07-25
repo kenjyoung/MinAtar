@@ -131,7 +131,7 @@ The player controls a cannon at the bottom of the screen and can shoot bullets u
 ## Citing MinAtar
 If you use MinAtar in your research please cite the following:
 
-Young, K. Tian, T. (2019). MinAtar: MinAtar: An Atari-Inspired Testbed for Thorough and Reproducible Reinforcement Learning Experiments.  *arXiv preprint arXiv:1903.03176*.
+Young, K. Tian, T. (2019). MinAtar: An Atari-Inspired Testbed for Thorough and Reproducible Reinforcement Learning Experiments.  *arXiv preprint arXiv:1903.03176*.
 
 In BibTeX format:
 
