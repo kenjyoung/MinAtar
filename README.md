@@ -95,7 +95,7 @@ gui.run()
 ```
 This will enter the agent environment interaction loop and then run the GUI thread, gui.run() will block until gui.quit() is called. To handle user input you can use gui.overwrite_key_handle(on_key_event, on_release_event). The arguments are functions to be called whenever a key is pressed, and released respectively. For an example of how to do this see examples/human_play.py.
 
-## Other Languages Support
+## Support for Other Languages
 
 - [Julia](https://github.com/mkschleg/MinAtar.jl/blob/master/README.md)
 
