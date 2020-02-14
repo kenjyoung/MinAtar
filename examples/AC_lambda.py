@@ -32,10 +32,12 @@ from minatar import Environment
 #
 #####################################################################################################################
 NUM_FRAMES = 5000000
-ALPHA = 0.00390625
+ALPHA = 0.00048828125
 LAMBDA = 0.8
 GAMMA = 0.99
 BETA = 0.01
+GAMMA_RMS = 0.999
+EPS_RMS = 0.0001
 MIN_DENOM = 0.0001
 
 dSiLU = lambda x: torch.sigmoid(x)*(1+x*(1-torch.sigmoid(x)))
@@ -47,9 +49,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 #####################################################################################################################
 # ACNetwork
 #
-# Setup the AC-network with one hidden 2D conv with variable number of input channels.  We use 16 filters, a quarter of
-# the original DQN paper of 64.  One hidden fully connected linear layer with a quarter of the original DQN paper of
-# 512 rectified units.  Finally, we use one output layer which is a fully connected softmax layer with a single output 
+# Setup the AC-network with one hidden 2D conv with variable number of input channels. We use 16 filters, a quarter of
+# the original DQN paper of 64. One hidden fully connected linear layer with a quarter of the original DQN paper of
+# 512 rectified units. Finally, we use one output layer which is a fully connected softmax layer with a single output 
 # for each valid action for the policy network, and another output which is a fully connected linear layer, with a
 # single output for the state value. 
 #
@@ -110,8 +112,8 @@ def get_state(s):
 #####################################################################################################################
 # world_dynamics
 #
-# Responsible for world dynamics.  It generates next state and reward after taking an action according to the behavior
-# policy.  The behavior policy is specified by the policy network output. Reward should be casted to float, otherwise
+# Responsible for world dynamics. It generates next state and reward after taking an action according to the behavior
+# policy. The behavior policy is specified by the policy network output. Reward should be casted to float, otherwise
 # it is LongTensor, which is used for indexing.
 #
 # Inputs:
@@ -123,9 +125,9 @@ def get_state(s):
 #
 #####################################################################################################################
 def world_dynamics(s, env, network):
-    # Since state is 10x10xchannel, we are not dealing with batch here.  network(s)[0] specifies the policy network,
-    # which we use to draw an action according to a multinomial distribution over axis 1, (axis 0 iterates over samples,
-    # and is unused in this case.  torch._no_grad() avoids tracking history in autograd.
+    # network(s)[0] specifies the policy network, which we use to draw an action according to a multinomial 
+    # distribution over axis 1, (axis 0 iterates over samples, and is unused in this case. torch._no_grad() 
+    # avoids tracking history in autograd.
     with torch.no_grad():
         action = torch.multinomial(network(s)[0],1)[0]
 
@@ -140,8 +142,7 @@ def world_dynamics(s, env, network):
 #####################################################################################################################
 # train
 #
-# This is where learning happens. More specifically, this function learns the weights of the policy/value network
-# using huber loss.
+# This is where learning happens. More specifically, this function updates the weights of the policy/value network.
 #
 # Inputs:
 #   sample: a single transition
@@ -151,7 +152,7 @@ def world_dynamics(s, env, network):
 #   alpha: learning rate for actor-critic update
 #
 #####################################################################################################################
-def train(sample, traces, grads, network, alpha):
+def train(sample, traces, grads, MSGs, network, alpha, time_step):
     # states, next_states: (1, in_channel, 10, 10) - inline with pytorch NCHW format
     # actions, rewards, is_terminal: (1, 1)
     last_state = sample.last_state
@@ -180,8 +181,12 @@ def train(sample, traces, grads, network, alpha):
         with torch.no_grad():
             V_last = network(last_state)[1]
             delta = GAMMA*(0 if is_terminal else V_curr)+reward-V_last
-            for param, trace in zip(network.parameters(), traces):
-                param.copy_(param+alpha*(trace*delta[0]+BETA*param.grad))
+
+            # Update uses RMSProp with initialization debiasing
+            for param, trace, MSG in zip(network.parameters(), traces, MSGs):
+                grad = trace*delta[0]+BETA*param.grad
+                MSG.copy_(GAMMA_RMS*MSG+(1-GAMMA_RMS)*grad*grad)
+                param.copy_(param+alpha*grad/(torch.sqrt(MSG/(1-GAMMA_RMS**(time_step+1))+EPS_RMS)))
 
     # Always update trace
     with torch.no_grad():
@@ -216,8 +221,14 @@ def AC_lambda(env, output_file_name, store_intermediate_result=False, load_path=
     # Instantiate networks, optimizer, loss and buffer
     network = ACNetwork(in_channels, num_actions).to(device)
 
+    # Eligibility traces are stored here
     traces = [torch.zeros(x.size(), dtype=torch.float32, device=device) for x in network.parameters()]
+
+    # Space allocated to store gradients used in training
     grads = [torch.zeros(x.size(), dtype=torch.float32, device=device) for x in network.parameters()]
+
+    # Running average of mean squared gradient for use in RMSProp
+    MSG = [torch.zeros(x.size(), dtype=torch.float32, device=device) for x in network.parameters()]
 
     # Set initial values
     e = 0
@@ -252,14 +263,14 @@ def AC_lambda(env, output_file_name, store_intermediate_result=False, load_path=
         is_terminated = False
         s_last = None
         r_last = None
-        t_last = None
+        term_last = None
         while(not is_terminated) and t < NUM_FRAMES:
             # Generate data
             s_prime, action, reward, is_terminated = world_dynamics(s, env, network)
 
-            sample = transition(s, s_last, action, r_last, t_last)
+            sample = transition(s, s_last, action, r_last, term_last)
 
-            train(sample, traces, grads, network, alpha)
+            train(sample, traces, grads, MSG, network, alpha, t)
 
             G += reward.item()
 
@@ -268,13 +279,15 @@ def AC_lambda(env, output_file_name, store_intermediate_result=False, load_path=
             # Continue the process
             s_last = s
             r_last = reward
-            t_last = is_terminated
+            term_last = is_terminated
             s = s_prime
 
         # Increment the episodes
         e += 1
-        sample = transition(s, s_last, action, r_last, t_last)
-        train(sample, traces, grads, network, alpha)
+        sample = transition(s, s_last, action, r_last, term_last)
+        train(sample, traces, grads, MSG, network, alpha, t)
+
+        # Clear elligibility traces after each episode
         for trace in traces:
             trace.zero_()
 
@@ -287,7 +300,8 @@ def AC_lambda(env, output_file_name, store_intermediate_result=False, load_path=
         avg_return = 0.99 * avg_return + 0.01 * G
         if e % 1000 == 0:
             logging.info("Episode " + str(e) + " | Return: " + str(G) + " | Avg return: " +
-                         str(numpy.around(avg_return, 2)) + " | Frame: " + str(t)+" | Time per frame: " +str((time.time()-t_start)/t) )
+                         str(numpy.around(avg_return, 2)) + " | Frame: " + str(t)+" | Time per frame: " +
+                         str((time.time()-t_start)/t) )
 
         # Save model data and other intermediate data if specified
         if store_intermediate_result and e % 1000 == 0:
@@ -320,14 +334,12 @@ def main():
     parser.add_argument("--loadfile", "-l", type=str)
     parser.add_argument("--alpha", "-a", type=float, default=ALPHA)
     parser.add_argument("--save", "-s", action="store_true")
-    parser.add_argument("--replayoff", "-r", action="store_true")
-    parser.add_argument("--targetoff", "-t", action="store_true")
     args = parser.parse_args()
 
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
 
-    # If there's an output specified, then use the user specified output.  Otherwise, create file in the current
+    # If there's an output specified, then use the user specified output. Otherwise, create file in the current
     # directory with the game's name.
     if args.output:
         file_name = args.output
