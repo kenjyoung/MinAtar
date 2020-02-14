@@ -252,7 +252,7 @@ class Env:
 
     # Process the game-state into the 10x10xn state provided to the agent and return
     def state(self):
-        state = np.zeros((10,10,len(self.channels)))
+        state = np.zeros((10,10,len(self.channels)),dtype=bool)
         state[self.sub_y,self.sub_x,self.channels['sub_front']] = 1
         back_x = self.sub_x-1 if self.sub_or else self.sub_x+1
         state[self.sub_y,back_x,self.channels['sub_back']] = 1

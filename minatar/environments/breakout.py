@@ -101,7 +101,7 @@ class Env:
 
     # Process the game-state into the 10x10xn state provided to the agent and return
     def state(self):
-        state = np.zeros((10,10,len(self.channels)))
+        state = np.zeros((10,10,len(self.channels)),dtype=bool)
         state[self.ball_y,self.ball_x,self.channels['ball']] = 1
         state[9,self.pos, self.channels['paddle']] = 1
         state[self.last_y,self.last_x,self.channels['trail']] = 1

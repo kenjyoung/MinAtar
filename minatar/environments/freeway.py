@@ -92,7 +92,7 @@ class Env:
 
     # Process the game-state into the 10x10xn state provided to the agent and return
     def state(self):
-        state = np.zeros((10,10,len(self.channels)))
+        state = np.zeros((10,10,len(self.channels)),dtype=bool)
         state[self.pos,4,self.channels['chicken']] = 1
         for car in self.cars:
             state[car[1],car[0], self.channels['car']] = 1
