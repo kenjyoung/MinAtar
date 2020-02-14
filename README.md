@@ -95,6 +95,10 @@ gui.run()
 ```
 This will enter the agent environment interaction loop and then run the GUI thread, gui.run() will block until gui.quit() is called. To handle user input you can use gui.overwrite_key_handle(on_key_event, on_release_event). The arguments are functions to be called whenever a key is pressed, and released respectively. For an example of how to do this see examples/human_play.py.
 
+## Support for Other Languages
+
+- [Julia](https://github.com/mkschleg/MinAtar.jl/blob/master/README.md)
+
 ## Results
 The following plots display results for DQN (Mnih et al., 2015) and actor-critic with eligibility traces. Our DQN agent uses a significantly smaller network. We perform an ablation study of DQN, and display results for variants without experience replay, and without a separate target network. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176).
 
