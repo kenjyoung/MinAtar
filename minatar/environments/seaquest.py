@@ -215,7 +215,7 @@ class Env:
             r = 0
         self.oxygen = max_oxygen
         self.diver_count -= 1
-        if(self.e_spawn_speed>1 or self.move_speed>2 and self.ramping):
+        if self.ramping and (self.e_spawn_speed>1 or self.move_speed>2):
             if(self.move_speed>2 and self.ramp_index%2):
                     self.move_speed-=1
             if(self.e_spawn_speed>1):
