@@ -75,7 +75,7 @@ class Env:
             self.terminal = True
         if(self.alien_move_timer==0):
             self.alien_move_timer = min(np.count_nonzero(self.alien_map),self.enemy_move_interval)
-            if(np.sum(self.alien_map[:,0])>0 and self.alien_dir<0 or np.sum(self.alien_map[:,9])>0 and self.alien_dir>0):
+            if((np.sum(self.alien_map[:,0])>0 and self.alien_dir<0) or (np.sum(self.alien_map[:,9])>0 and self.alien_dir>0)):
                 self.alien_dir = -self.alien_dir
                 if(np.sum(self.alien_map[9,:])>0):
                     self.terminal = True
