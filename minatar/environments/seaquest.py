@@ -110,6 +110,7 @@ class Env:
                             self.e_subs.remove(x)
                             self.f_bullets.remove(bullet)
                             r+=1
+                            break
 
         # Update divers
         for diver in reversed(self.divers):
