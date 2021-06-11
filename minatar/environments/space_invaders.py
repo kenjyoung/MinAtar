@@ -29,7 +29,7 @@ enemy_shot_interval = 10
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = True, seed = None):
+    def __init__(self, ramping = True, random_state=None):
         self.channels ={
             'cannon':0,
             'alien':1,
@@ -40,7 +40,10 @@ class Env:
         }
         self.action_map = ['n','l','u','r','d','f']
         self.ramping = ramping
-        self.random = np.random.RandomState(seed)
+        if random_state is None:
+            self.random = np.random.RandomState()
+        else:
+            self.random = random_state
         self.reset()
 
     # Update environment according to agent action

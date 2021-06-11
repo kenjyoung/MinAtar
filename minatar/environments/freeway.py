@@ -28,7 +28,7 @@ time_limit = 2500
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = None, seed = None):
+    def __init__(self, ramping = None, random_state = None):
         self.channels ={
             'chicken':0,
             'car':1,
@@ -39,7 +39,10 @@ class Env:
             'speed5':6,
         }
         self.action_map = ['n','l','u','r','d','f']
-        self.random = np.random.RandomState(seed)
+        if random_state is None:
+            self.random = np.random.RandomState()
+        else:
+            self.random = random_state
         self.reset()
 
     # Update environment according to agent action

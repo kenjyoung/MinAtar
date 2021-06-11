@@ -17,7 +17,7 @@ import numpy as np
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = None, seed = None):
+    def __init__(self, ramping = None, random_state = None):
         self.channels ={
             'paddle':0,
             'ball':1,
@@ -25,7 +25,10 @@ class Env:
             'brick':3,
         }
         self.action_map = ['n','l','u','r','d','f']
-        self.random = np.random.RandomState(seed)
+        if random_state is None:
+            self.random = np.random.RandomState()
+        else:
+            self.random = random_state
         self.reset()
 
     # Update environment according to agent action
