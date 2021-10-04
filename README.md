@@ -55,6 +55,13 @@ Use the arrow keys to move and space bar to fire. Also, press q to quit and r to
 
 Also included in the examples directory are example implementations of DQN (dqn.py) and online actor-critic with eligibility traces (AC_lambda.py).
 
+## OpenAI Gym Wrapper
+MinAtar now includes an optional OpenAI Gym wrapper. To include this wrapper in the installation set the environment flag INSTALL_GYM_WRAPPER prior to installation. For example, install MinAtar with the following command
+```bash
+INSTALL_GYM_WRAPPER=1 pip install .
+```
+This will additionally install a package called gym_minatar, which when imported will register the following gym environments corresponding to the associated MinAtar game: Asterix-MinAtar-v0, Breakout-MinAtar-v0, Freeway-MinAtar-v0, Seaquest-MinAtar-v0, SpaceInvaders-MinAtar-v0.
+
 ## Visualizing the Environments
 We provide 2 ways to visualize a MinAtar environment.
 ### Using Environment.display_state()
