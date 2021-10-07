@@ -79,7 +79,7 @@ This is the simplest way to visualize the environments, unless you need to handl
 ### Using GUI class
 We also include a slightly more complex GUI to visualize the environments and optionally handle user input. This GUI is used in examples/human_play.py to play as a human and examples/agent_play.py to visualize the performance of trained agents. To use the GUI you can import it in your code with:
 ```python
-from minatar import GUI
+from minatar.gui import GUI
 ```
 Initialize an instance of the GUI class by providing a name for the window, and the integer number of input channels for the minatar environment to be visualized. For example:
 ```python

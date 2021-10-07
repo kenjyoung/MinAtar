@@ -8,7 +8,8 @@
 
 import argparse
 import tkinter as Tk
-from minatar import Environment, GUI
+from minatar import Environment
+from minatar.gui import GUI
 
 ################################################################################################################
 # Script that allows a human to play any of the MinAtar games. Use arrow keys to move and space to fire. 

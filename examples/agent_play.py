@@ -10,7 +10,8 @@
 import torch
 import argparse, numpy
 
-from minatar import Environment, GUI
+from minatar import Environment
+from minatar.gui import GUI
 from dqn import QNetwork, get_state
 from AC_lambda import ACNetwork
 

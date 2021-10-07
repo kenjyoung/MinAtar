@@ -27,7 +27,7 @@ if install_gym_wrapper:
 
 setup(
     name='MinAtar',
-    version='1.0.8',
+    version='1.0.9',
     description='A miniaturized version of the arcade learning environment.',
     url='https://github.com/kenjyoung/MinAtar',
     author='Kenny Young',
