@@ -60,7 +60,7 @@ MinAtar now includes an optional OpenAI Gym wrapper. To include this wrapper in 
 ```bash
 INSTALL_GYM_WRAPPER=1 pip install .
 ```
-This will additionally install a package called gym_minatar, which when imported will register the following gym environments corresponding to the associated MinAtar game: Asterix-MinAtar-v0, Breakout-MinAtar-v0, Freeway-MinAtar-v0, Seaquest-MinAtar-v0, SpaceInvaders-MinAtar-v0.
+This will additionally install a package called gym_minatar, which when imported will register the following gym environments corresponding to the associated MinAtar game: Asterix-MinAtar-v0, Breakout-MinAtar-v0, Freeway-MinAtar-v0, Seaquest-MinAtar-v0, SpaceInvaders-MinAtar-v0. An additional version of each game which uses the minimal action set for the game (as opposed to all 6 actions, some of which are equivalent to no-op depending on the game), for this version, simply replace v0 above with v1. Note that the results included in this repo and the associated paper use the full action set of 6 actions.
 
 ## Visualizing the Environments
 We provide 2 ways to visualize a MinAtar environment.
