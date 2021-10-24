@@ -1,7 +1,4 @@
 from setuptools import setup
-import os
-
-install_gym_wrapper = os.getenv("INSTALL_GYM_WRAPPER", default=False)
 
 packages = ['minatar', 'minatar.environments']
 install_requires = [
@@ -19,11 +16,9 @@ install_requires = [
     'torch>=1.0.0',
 ]
 
-if install_gym_wrapper:
-    packages += ['gym_minatar', 'gym_minatar.envs']
-    install_requires += ['gym>=0.13.0']
-
-
+entry_points = {
+    'gym.envs': ['MinAtar=minatar.gym:register_envs']
+}
 
 setup(
     name='MinAtar',
@@ -34,4 +29,5 @@ setup(
     author_email='kjyoung@ualberta.com',
     license='GPL',
     packages=packages,
+    entry_points=entry_points,
     install_requires=install_requires)
