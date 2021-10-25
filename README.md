@@ -56,11 +56,12 @@ Use the arrow keys to move and space bar to fire. Also, press q to quit and r to
 Also included in the examples directory are example implementations of DQN (dqn.py) and online actor-critic with eligibility traces (AC_lambda.py).
 
 ## OpenAI Gym Wrapper
-MinAtar now includes an optional OpenAI Gym wrapper. To include this wrapper in the installation set the environment flag INSTALL_GYM_WRAPPER prior to installation. For example, install MinAtar with the following command
+MinAtar now includes an OpenAI Gym plugin using the Gym plugin system. If a sufficiently recent version of OpenAI gym (`pip install gym==0.21.0` works) is installed, this plugin should be automatically available after installing MinAtar as normal. A gym environment can then be constructed as follows:
 ```bash
-INSTALL_GYM_WRAPPER=1 pip install .
-```
-This will additionally install a package called gym_minatar, which when imported will register the following gym environments corresponding to the associated MinAtar game: Asterix-MinAtar-v0, Breakout-MinAtar-v0, Freeway-MinAtar-v0, Seaquest-MinAtar-v0, SpaceInvaders-MinAtar-v0. An additional version of each game which uses the minimal action set for the game (as opposed to all 6 actions, some of which are equivalent to no-op depending on the game), for this version, simply replace v0 above with v1. Note that the results included in this repo and the associated paper use the full action set of 6 actions.
+import gym
+env = gym.make('MinAtar/<game>')
+````
+where game is one of: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1. For each game, v0 specifies the version with all 6 actions available (some of which are equivalent to no-op depending on the game), while v1 specifies the version which uses the minimal action set for the game. Note that the results included in this repo and the associated paper use the full action set of 6 actions.
 
 ## Visualizing the Environments
 We provide 2 ways to visualize a MinAtar environment.
