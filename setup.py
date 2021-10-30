@@ -13,6 +13,9 @@ install_requires = [
     'scipy>=1.2.1',
     'seaborn>=0.9.0',
     'six>=1.12.0',
+]
+
+examples_requires = [
     'torch>=1.0.0',
 ]
 
@@ -30,4 +33,6 @@ setup(
     license='GPL',
     packages=packages,
     entry_points=entry_points,
-    install_requires=install_requires)
+    install_requires=install_requires,
+    extras_require={'examples': examples_requires},
+)
