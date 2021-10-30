@@ -49,7 +49,7 @@ The examples/random_play.py is a simple example to demonstrate how to use the mo
 To play a game as a human, run examples/human_play.py as follows:
 
 ```bash
-python human_play.py -g <game>
+python examples/human_play.py -g <game>
 ```
 Use the arrow keys to move and space bar to fire. Also, press q to quit and r to reset.
 
