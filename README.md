@@ -27,12 +27,17 @@ pip install --upgrade pip
 ```
 
 2.  Install MinAtar:
+To install the package and its dependencies
 ```bash
 pip install .
 ```
 If you have any issues with automatic dependency installation, you can instead install the necessary dependencies manually and run
 ```bash
 pip install . --no-deps
+```
+To install additional dependencies that are used by some examples (in particular `PyTorch`) run
+```bash
+pip install ".[examples]"
 ```
 
 To verify the installation is successful, run
@@ -49,7 +54,7 @@ The examples/random_play.py is a simple example to demonstrate how to use the mo
 To play a game as a human, run examples/human_play.py as follows:
 
 ```bash
-python human_play.py -g <game>
+python examples/human_play.py -g <game>
 ```
 Use the arrow keys to move and space bar to fire. Also, press q to quit and r to reset.
 
