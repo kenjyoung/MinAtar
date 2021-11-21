@@ -5,6 +5,20 @@ from gym.envs import register
 
 from minatar import Environment
 
+import numpy as np
+
+channel2rgb = {
+    0 : [255, 0, 0],
+    1 : [0, 255, 0],
+    2 : [0, 0, 255],
+    3 : [128, 128, 0],
+    4 : [128, 0, 128],
+    5 : [0, 128, 128],
+    6 : [170, 170, 85],
+    7 : [170, 85, 170],
+    8 : [85, 170, 170],
+    9 : [85, 85, 170]
+}
 
 class BaseEnv(gym.Env):
     metadata = {"render.modes": ["human", "array"]}
@@ -48,6 +62,16 @@ class BaseEnv(gym.Env):
             return self.game.state()
         elif mode == "human":
             self.game.display_state(self.display_time)
+        elif mode == 'rgb_array':
+            n_channels = self.game.n_channels
+            state = self.game.state() # np.zeros((10, 10, n_channels), dtype=bool)
+            array = np.zeros([100, 100, 3], dtype=np.uint8)
+            for x in range(state.shape[0]):
+                for y in range(state.shape[1]):
+                    for l in range(n_channels):
+                        if state[x, y, l] == True:
+                            array[x*10:x*10+10, y*10:y*10+10] = channel2rgb[l]
+            return array
 
     def close(self):
         if self.game.visualized:
