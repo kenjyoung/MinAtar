@@ -27,6 +27,7 @@ class BaseEnv(gym.Env):
         )
 
     def step(self, action):
+        action = int(action)
         action = self.action_set[action]
         reward, done = self.game.act(action)
         return self.game.state(), reward, done, {}
