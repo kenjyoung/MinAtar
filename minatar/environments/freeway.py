@@ -70,7 +70,6 @@ class Env:
         for car in self.cars:
             if(car[0:2]==[4,self.pos]):
                 self.pos = 9
-                self.terminal = True
             if(car[2]==0):
                 car[2]=abs(car[3])
                 car[0]+=1 if car[3]>0 else -1
@@ -80,7 +79,6 @@ class Env:
                     car[0]=0
                 if(car[0:2]==[4,self.pos]):
                     self.pos = 9
-                    self.terminal = True
             else:
                 car[2]-=1
 

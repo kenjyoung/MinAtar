@@ -1,10 +1,3 @@
-A fork of [MinAtar](https://github.com/kenjyoung/MinAtar). These points are changed from the original MinAtar:
-
-- In Freeway, when a player is hit by a car, the episode ends.
-
-
----
-
 # MinAtar
 MinAtar is a testbed for AI agents which implements miniaturized versions of several Atari 2600 games. MinAtar is inspired by the Arcade Learning Environment (Bellemare et. al. 2013) but simplifies the games to make experimentation with the environments more accessible and efficient. Currently, MinAtar provides analogues to five Atari games which play out on a 10x10 grid. The environments provide a 10x10xn state representation, where each of the n channels correspond to a game-specific object, such as ball, paddle and brick in the game Breakout.
 
