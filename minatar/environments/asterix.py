@@ -43,8 +43,10 @@ class Env:
 
     # Update environment according to agent action
     def act(self, a):
+        self.random.set_state(self.random_state)
         r = 0
         if(self.terminal):
+            self.random_state = self.random.get_state()
             return r, self.terminal
             
         a = self.action_map[a]
@@ -105,6 +107,7 @@ class Env:
                     self.spawn_speed-=1
                 self.ramp_index+=1
                 self.ramp_timer=ramp_interval
+        self.random_state = self.random.get_state()
         return r, self.terminal
 
     # Spawn a new enemy or treasure at a random location with random direction (if all rows are filled do nothing)
@@ -148,6 +151,7 @@ class Env:
         self.ramp_timer = ramp_interval
         self.ramp_index = 0
         self.terminal = False
+        self.random_state = self.random.get_state()
 
     # Dimensionality of the game-state (10x10xn)
     def state_shape(self):

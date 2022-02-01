@@ -48,8 +48,10 @@ class Env:
 
     # Update environment according to agent action
     def act(self, a):
+        self.random.set_state(self.random_state)
         r = 0
         if(self.terminal):
+            self.random_state = self.random.get_state()
             return r, self.terminal
             
         a = self.action_map[a]
@@ -92,6 +94,7 @@ class Env:
         self.terminate_timer-=1
         if(self.terminate_timer<0):
             self.terminal = True
+        self.random_state = self.random.get_state()
         return r, self.terminal
 
     # Query the current level of the difficulty ramp, difficulty does not ramp in this game, so return None
@@ -142,6 +145,7 @@ class Env:
         self.move_timer = player_speed
         self.terminate_timer = time_limit
         self.terminal = False
+        self.random_state = self.random.get_state()
 
     # Dimensionality of the game-state (10x10xn)
     def state_shape(self):

@@ -1,6 +1,7 @@
 A fork of [MinAtar](https://github.com/kenjyoung/MinAtar). These points are changed from the original MinAtar:
 
-- In Freeway, new option `terminal_if_die` is added. If true, the episode ends when the agent is hit by a car.
+- In Freeway, new option `terminal_if_die` is added. If true, the episode ends when the agent is hit by a car. [#1](https://github.com/sotetsuk/MinAtar/pull/1)
+- Store random state for reproducing the same state transactions. [#2](https://github.com/sotetsuk/MinAtar/pull/2)
 
 
 ---
