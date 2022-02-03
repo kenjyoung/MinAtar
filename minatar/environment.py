@@ -25,6 +25,8 @@ class Environment:
         self.last_action = 0
         self.visualized = False
         self.closed = False
+        self.ims = []
+        self.fig = None
 
     # Wrapper for env.act
     def act(self, a):
@@ -89,3 +91,38 @@ class Environment:
     def close_display(self):
         plt.close()
         self.closed = True
+
+    def add_img(self):
+        if(not self.visualized):
+            global plt
+            global colors
+            global sns
+            mpl = __import__('matplotlib.pyplot', globals(), locals())
+            plt = mpl.pyplot
+            mpl = __import__('matplotlib.colors', globals(), locals())
+            colors = mpl.colors
+            sns = __import__('seaborn', globals(), locals())
+            self.cmap = sns.color_palette("cubehelix", self.n_channels)
+            self.cmap.insert(0,(0,0,0))
+            self.cmap=colors.ListedColormap(self.cmap)
+            bounds = [i for i in range(self.n_channels+2)]
+            self.norm = colors.BoundaryNorm(bounds, self.n_channels+1)
+            self.visualized = True
+            self.fig = plt.figure()
+        if(self.closed):
+            self.closed = False
+        state = self.env.state()
+        numerical_state = np.amax(state*np.reshape(np.arange(self.n_channels)+1,(1,1,-1)),2)+0.5
+        im = plt.imshow(numerical_state, cmap=self.cmap, norm=self.norm, interpolation='none', animated=True)
+        self.ims.append([im])
+
+    def save_gif(self, gif_name="minatar.gif"):
+        global animation
+        mpl = __import__('matplotlib.animation', globals(), locals())
+        animation = mpl.animation
+        ani = animation.ArtistAnimation(self.fig, self.ims, interval=100)
+        ani.save(gif_name)
+        self.fig = None
+        self.ims = []
+        self.closed = True
+
