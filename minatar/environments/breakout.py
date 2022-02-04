@@ -127,6 +127,7 @@ class Env:
         self.last_y = self.ball_y
         self.terminal = False
         self.random_state = self.random.get_state()
+        self.last_action = 0
 
     # Dimensionality of the game-state (10x10xn)
     def state_shape(self):

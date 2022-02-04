@@ -1,8 +1,9 @@
-A fork of [MinAtar](https://github.com/kenjyoung/MinAtar). These points are changed from the original MinAtar:
+A fork of [MinAtar](https://github.com/kenjyoung/MinAtar) for personal use. These points are changed from the original MinAtar:
 
-- In Freeway, new option `terminate_if_die` is added. If true, the episode ends when the agent is hit by a car. [#1](https://github.com/sotetsuk/MinAtar/pull/1)
+- In Freeway, new option `terminate_if_die` is added. If true, the episode ends immediately when the agent is hit by a car. [#1](https://github.com/sotetsuk/MinAtar/pull/1)
 - Store random state for reproducing the same state transactions. [#2](https://github.com/sotetsuk/MinAtar/pull/2)
-- Save gif animation [#3](https://github.com/sotetsuk/MinAtar/pull/3)
+- Move `last_action` attribute from `Environment` class to each game class. [#5](https://github.com/sotetsuk/MinAtar/pull/5)
+- Save gif animation. [#3](https://github.com/sotetsuk/MinAtar/pull/3)
 
 ---
 
