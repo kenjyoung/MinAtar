@@ -112,14 +112,14 @@ class Env:
 
     # Spawn a new enemy or treasure at a random location with random direction (if all rows are filled do nothing)
     def _spawn_entity(self):
-        lr = self.random.choice([True,False])
-        is_gold = self.random.choice([True,False], p=[1/3,2/3])
-        x = 0 if lr else 9
+        self.lr = self.random.choice([True,False])
+        self.is_gold = self.random.choice([True,False], p=[1/3,2/3])
+        x = 0 if self.lr else 9
         slot_options = [i for i in range(len(self.entities)) if self.entities[i]==None]
         if(not slot_options):
             return
-        slot = self.random.choice(slot_options)
-        self.entities[slot] = [x,slot+1,lr,is_gold]
+        self.slot = self.random.choice(slot_options)
+        self.entities[self.slot] = [x,self.slot+1,self.lr,self.is_gold]
 
     # Query the current level of the difficulty ramp, could be used as additional input to agent for example
     def difficulty_ramp(self):

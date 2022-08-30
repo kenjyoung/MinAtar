@@ -127,16 +127,16 @@ class Env:
 
     # Randomize car speeds and directions, also reset their position if initialize=True
     def _randomize_cars(self, initialize=False):
-        speeds = self.random.randint(1,6,8)
-        directions = self.random.choice([-1,1],8)
-        speeds*=directions
+        self.speeds = self.random.randint(1,6,8)
+        self.directions = self.random.choice([-1,1],8)
+        self.speeds*=self.directions
         if(initialize):
             self.cars = []
             for i in range(8):
-                self.cars+=[[0,i+1,abs(speeds[i]),speeds[i]]]
+                self.cars+=[[0,i+1,abs(self.speeds[i]),self.speeds[i]]]
         else:
             for i in range(8):
-                self.cars[i][2:4]=[abs(speeds[i]),speeds[i]]
+                self.cars[i][2:4]=[abs(self.speeds[i]),self.speeds[i]]
 
     # Reset to start state for new episode
     def reset(self):
