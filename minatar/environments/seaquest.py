@@ -66,7 +66,7 @@ class Env:
         r = 0
         if(self.terminal):
             return r, self.terminal
-            
+
         a = self.action_map[a]
 
         # Spawn enemy if timer is up
@@ -194,7 +194,7 @@ class Env:
         self.e_spawn_timer -= self.e_spawn_timer>0
         self.d_spawn_timer -= self.d_spawn_timer>0
         self.shot_timer -= self.shot_timer>0
-        if(self.oxygen<0):
+        if(self.oxygen<=0):
             self.terminal = True
         if(self.sub_y>0):
             self.oxygen-=1
@@ -260,7 +260,7 @@ class Env:
         state[self.sub_y,self.sub_x,self.channels['sub_front']] = 1
         back_x = self.sub_x-1 if self.sub_or else self.sub_x+1
         state[self.sub_y,back_x,self.channels['sub_back']] = 1
-        state[9,0:self.oxygen*10//max_oxygen, self.channels['oxygen_guage']] = 1
+        state[9,0:max(0,self.oxygen)*10//max_oxygen, self.channels['oxygen_guage']] = 1
         state[9,9-self.diver_count:9, self.channels['diver_guage']] = 1
         for bullet in self.f_bullets:
             state[bullet[1],bullet[0], self.channels['friendly_bullet']] = 1

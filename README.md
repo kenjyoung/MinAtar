@@ -11,6 +11,7 @@ MinAtar is a testbed for AI agents which implements miniaturized versions of sev
 <img src="img/space_invaders.gif" width="200" />
 </p>
 
+
 ## Quick Start
 To use MinAtar, you need python3 installed, make sure pip is also up to date.  To run the included `DQN` and `AC_lambda` examples, you need `PyTorch`.  To install MinAtar, please follow the steps below:
 
@@ -113,7 +114,9 @@ This will enter the agent environment interaction loop and then run the GUI thre
 - [Julia](https://github.com/mkschleg/MinAtar.jl/blob/master/README.md)
 
 ## Results
-The following plots display results for DQN (Mnih et al., 2015) and actor-critic (AC) with eligibility traces. Our DQN agent uses a significantly smaller network compared to that of Mnih et al., 2015. We display results for DQN with and without experience reply. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. The top plots display the sensitivity of final performance to the step-size parameter, while the bottom plots display the average return during training as a function of training frames. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176).
+The following plots display results for DQN (Mnih et al., 2015) and actor-critic (AC) with eligibility traces. Our DQN agent uses a significantly smaller network compared to that of Mnih et al., 2015. We display results for DQN with and without experience reply. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. The top plots display the sensitivity of final performance to the step-size parameter, while the bottom plots display the average return during training as a function of training frames. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176). 
+
+**Note, the currently displayed results for Seaquest are for the version in MinAtar v1.0.10 and lower, where a bug caused the oxygen bar to flash to full one step before running out**. Results for the updated version may be different.
 
 <img align="center" src="img/sensitivity_curves.gif" width=800>
 <img align="center" src="img/learning_curves.gif" width=800>
@@ -138,6 +141,8 @@ The player begins at the bottom of the screen and the motion is restricted to tr
 
 ### Seaquest
 The player controls a submarine consisting of two cells, front and back, to allow direction to be determined. The player can also fire bullets from the front of the submarine. Enemies consist of submarines and fish, distinguished by the fact that submarines shoot bullets and fish do not. A reward of +1 is given each time an enemy is struck by one of the player's bullets, at which point the enemy is also removed. There are also divers which the player can move onto to pick up, doing so increments a bar indicated by another channel along the bottom of the screen. The player also has a limited supply of oxygen indicated by another bar in another channel. Oxygen degrades over time and is replenished whenever the player moves to the top of the screen as long as the player has at least one rescued diver on board. The player can carry a maximum of 6 divers. When surfacing with less than 6, one diver is removed. When surfacing with 6, all divers are removed and a reward is given for each active cell in the oxygen bar. Each time the player surfaces the difficulty is increased by increasing the spawn rate and movement speed of enemies. Termination occurs when the player is hit by an enemy fish, sub or bullet; or when oxygen reaches 0; or when the player attempts to surface with no rescued divers. Enemy and diver directions are indicated by a trail channel active in their previous location to reduce partial observability.
+
+**Note: MinAtar v1.0.10 and lower have a bug in Seaquest which causes the oxygen bar to flash to full one time-step before termination occured due to oxygen running out. This could have a significant impact on agents which learn from one step transitions as a full oxygen bar could either mean full oxygen or imminent termination due to no oxygen. For this reason Seaquest results obtained prior to v1.0.11 may not be consistent with results obtained from v1.0.11 onward.**
 
 [Video](https://www.youtube.com/watch?v=W9k38b5QPxA&t)
 
