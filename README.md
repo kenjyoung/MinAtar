@@ -112,6 +112,7 @@ This will enter the agent environment interaction loop and then run the GUI thre
 ## Support for Other Languages
 
 - [Julia](https://github.com/mkschleg/MinAtar.jl/blob/master/README.md)
+- [JAX](https://github.com/RobertTLange/gymnax)
 
 ## Results
 The following plots display results for DQN (Mnih et al., 2015) and actor-critic (AC) with eligibility traces. Our DQN agent uses a significantly smaller network compared to that of Mnih et al., 2015. We display results for DQN with and without experience reply. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. The top plots display the sensitivity of final performance to the step-size parameter, while the bottom plots display the average return during training as a function of training frames. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176). 
