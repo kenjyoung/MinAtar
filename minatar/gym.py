@@ -29,7 +29,7 @@ class BaseEnv(gym.Env):
     def step(self, action):
         action = self.action_set[action]
         reward, done = self.game.act(action)
-        return self.game.state(), reward, done, False, {}
+        return self.game.state(), reward, done, {}
 
     def reset(self, seed=None, options=None):
         if(seed is not None):
@@ -39,7 +39,7 @@ class BaseEnv(gym.Env):
                 **self.game_kwargs
             )
         self.game.reset()
-        return self.game.state(), {}
+        return self.game.state()
 
     def seed(self, seed=None):
         self.game = Environment(
