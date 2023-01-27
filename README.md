@@ -13,7 +13,13 @@ MinAtar is a testbed for AI agents which implements miniaturized versions of sev
 
 
 ## Quick Start
-To use MinAtar, you need python3 installed, make sure pip is also up to date.  To run the included `DQN` and `AC_lambda` examples, you need `PyTorch`.  To install MinAtar, please follow the steps below:
+To use MinAtar, you need python3 installed, make sure pip is also up to date.  To run the included `DQN` and `AC_lambda` examples, you need `PyTorch`.
+
+The simplest way to install MinAtar is via the PyPi repository, which can be done as follows:
+```bash
+pip install minatar
+```
+If you'd like to install MinAtar from the github repo instead (for example if you'd like to modify the code), please follow the steps below:
 
 1. Clone the repo: 
 ```bash
@@ -62,12 +68,19 @@ Use the arrow keys to move and space bar to fire. Also, press q to quit and r to
 Also included in the examples directory are example implementations of DQN (dqn.py) and online actor-critic with eligibility traces (AC_lambda.py).
 
 ## OpenAI Gym Wrapper
-MinAtar now includes an OpenAI Gym plugin using the Gym plugin system. If a sufficiently recent version of OpenAI gym (`pip install gym==0.21.0` works) is installed, this plugin should be automatically available after installing MinAtar as normal. A gym environment can then be constructed as follows:
+MinAtar now includes an OpenAI Gym plugin using the Gym plugin system. If a sufficiently recent version of OpenAI gym (`pip install gym==0.26.2` works) is installed, this plugin should be automatically available after installing MinAtar as normal.
+
+A gym environment can be constructed as follows:
 ```bash
 import gym
 env = gym.make('MinAtar/<game>')
 ````
 where game is one of: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1. For each game, v0 specifies the version with all 6 actions available (some of which are equivalent to no-op depending on the game), while v1 specifies the version which uses the minimal action set for the game. Note that the results included in this repo and the associated paper use the full action set of 6 actions.
+
+**Note: as of version 0.26 the gym interface has changed and the most recent version of MinAtar uses this version of the interface.** If you would like to use MinAtar with an older version of gym you can use version 1.0.11 of MinAtar. You can install this version using:
+```bash
+pip install minatar==1.0.11
+```
 
 ## Visualizing the Environments
 We provide 2 ways to visualize a MinAtar environment.
