@@ -1,4 +1,5 @@
 # Adapted from https://github.com/qlan3/gym-games
+import numpy as np
 import gym
 from gym import spaces
 from gym.envs import register
@@ -7,11 +8,13 @@ from minatar import Environment
 
 
 class BaseEnv(gym.Env):
-    metadata = {"render.modes": ["human", "array"]}
+    metadata = {"render.modes": ["human", "array", "rgb_array"]}
 
-    def __init__(self, game, display_time=50, use_minimal_action_set=False, **kwargs):
+    def __init__(self, game, display_time=50, use_minimal_action_set=False,
+                render_mode=None, **kwargs):
         self.game_name = game
         self.display_time = display_time
+        self.render_mode = render_mode
 
         self.game_kwargs = kwargs
         self.seed()
@@ -49,11 +52,33 @@ class BaseEnv(gym.Env):
         )
         return seed
 
-    def render(self, mode="human"):
-        if mode == "array":
+    def render(self):
+        if self.render_mode is None:
+            gym.logger.warn(
+                "You are calling render method without specifying any render mode. "
+                "You can specify the render_mode at initialization, "
+                f'e.g. gym("{self.spec.id}", render_mode="rgb_array")'
+            )
+            return
+        if self.render_mode == "array":
             return self.game.state()
-        elif mode == "human":
+        elif self.render_mode == "human":
             self.game.display_state(self.display_time)
+        elif self.render_mode == "rgb_array": # use the same color palette of Environment.display_state
+            state = self.game.state()
+            n_channels = state.shape[-1]
+            mpl = __import__('matplotlib.colors', globals(), locals())
+            colors = mpl.colors
+            sns = __import__('seaborn', globals(), locals())
+            cmap = sns.color_palette("cubehelix", n_channels)
+            cmap.insert(0, (0,0,0))
+            numerical_state = np.amax(
+                state * np.reshape(np.arange(n_channels) + 1, (1,1,-1)), 2)
+            rgb_array = np.stack(cmap)[numerical_state]
+            return rgb_array
+        else:
+            raise NotImplementedError(
+                f'render mode must be either array, human, rgb_array (received )')
 
     def close(self):
         if self.game.visualized:
