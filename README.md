@@ -13,41 +13,42 @@ MinAtar is a testbed for AI agents which implements miniaturized versions of sev
 
 
 ## Quick Start
-To use MinAtar, you need python3 installed, make sure pip is also up to date.  To run the included `DQN` and `AC_lambda` examples, you need `PyTorch`.
+To use MinAtar, you need `python3` installed (make sure `pip` is also up to date).  
+To run the included `DQN` and `AC_lambda` examples, you need `PyTorch`.
 
-The simplest way to install MinAtar is via the PyPi repository, which can be done as follows:
-```bash
-pip install minatar
-```
-If you'd like to install MinAtar from the github repo instead (for example if you'd like to modify the code), please follow the steps below:
+If you want to use a virtual environment, before installing MinAtar run
 
-1. Clone the repo:
-```bash
-git clone https://github.com/kenjyoung/MinAtar.git
-```
-If you prefer running MinAtar in a virtualenv, you can do the following before step 2:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-# Upgrade Pip
 pip install --upgrade pip
 ```
 
-2.  Install MinAtar:
-To install the package and its dependencies
+Then you can install MinAtar either with PyPi repository or from source.
+
+1. Via PyPi:
 ```bash
+pip install minatar
+```
+
+2. From Source:
+```bash
+git clone https://github.com/kenjyoung/MinAtar.git
+cd MinAtar
 pip install .
 ```
-If you have any issues with automatic dependency installation, you can instead install the necessary dependencies manually and run
+
+If you have issues with automatic dependency installation, you can instead install the necessary dependencies manually and run
 ```bash
 pip install . --no-deps
 ```
+
 To install additional dependencies that are used by some examples (in particular `PyTorch`) run
 ```bash
 pip install ".[examples]"
 ```
 
-To verify the installation is successful, run
+To verify that MinAtar is installed, run
 ```bash
 python examples/random_play.py -g breakout
 ```
@@ -56,28 +57,32 @@ The program will run 1000 episodes with a random policy and report the mean and 
 Avg Return: 0.5+/-0.023194827009486406
 ```
 
-The examples/random_play.py is a simple example to demonstrate how to use the module. `breakout` in the previous command can be replaced by one of the five available games: asterix, breakout, freeway, seaquest and space_invaders. See the Games section below for details of each game.
+You can replace `breakout` with one of the five available games: `asterix`, `breakout`, `freeway`, `seaquest`, and `space_invaders`.
+See the Games section below for details of each game.
 
-To play a game as a human, run examples/human_play.py as follows:
-
+To play a game as a human, run
 ```bash
 python examples/human_play.py -g <game>
 ```
-Use the arrow keys to move and space bar to fire. Also, press q to quit and r to reset.
+Use the arrow keys to move and space bar to fire. Press q to quit and r to reset.
 
-Also included in the examples directory are example implementations of DQN (dqn.py) and online actor-critic with eligibility traces (AC_lambda.py).
+Finally, we provide a simple implementations of DQN in `dqn.py` and online actor-critic with eligibility traces in `AC_lambda.py`.
+
 
 ## OpenAI Gym Wrapper
-MinAtar now includes an OpenAI Gym plugin using the Gym plugin system. If a sufficiently recent version of OpenAI gym (`pip install gym==0.26.2` works) is installed, this plugin should be automatically available after installing MinAtar as normal.
-
-A gym environment can be constructed as follows:
+MinAtar is fully compatible with the latest OpenAI Gym version (0.26).
+A Gym environment can be constructed as follows:
 ```bash
 import gym
-env = gym.make('MinAtar/<game>')
+env = gym.make('MinAtar/<game-id>')
 ````
-where game is one of: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1. For each game, v0 specifies the version with all 6 actions available (some of which are equivalent to no-op depending on the game), while v1 specifies the version which uses the minimal action set for the game. Note that the results included in this repo and the associated paper use the full action set of 6 actions.
+The following game IDs ara available: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1.  
+For each game, in the v0 versions the action set has all 6 available actions (some of which are equivalent to no-op depending on the game),
+while in the v1 versions the action set is reduced to just the minimal actions for each game.  
+Note that the results included in this repo and the associated paper use the full action set of 6 actions.
 
-**Note: as of version 0.26 the gym interface has changed and the most recent version of MinAtar uses this version of the interface.** If you would like to use MinAtar with an older version of gym you can use version 1.0.11 of MinAtar. You can install this version using:
+> If you want to use the old Gym API (without the `truncated` flag, and with the old `reset()` and `seed()` methods),
+install MinAtar 1.0.11 by running:
 ```bash
 pip install minatar==1.0.11
 ```
@@ -86,64 +91,63 @@ pip install minatar==1.0.11
 We provide 2 ways to visualize a MinAtar environment.
 
 ### Using Environment.display_state()
-The Environment class includes a simple visualizer using matplotlib in the display_state function. To use this simply call:
+The Environment class includes a simple visualizer using matplotlib in the `display_state()` function. To use it simply call:
 ```python
 env = Environment('breakout')
 env.display_state(50)
+# train, do steps, ...
+env.close_display()
 ```
 or, if you're using the gym interface:
 ```python
-env = gym.make('Minatar/Breakout-v1')
+env = gym.make('MinAtar/Breakout-v1')
 env.game.display_state(50)
-```
-The argument is the number of milliseconds to display the state before continuing execution. To close the resulting display window call:
-```python
+# train, do steps, ...
 env.game.close_display()
 ```
-This is the simplest way to visualize the environments, unless you need to handle user input during execution in which case you could use the provided GUI class.  
-With the gym interface, you can also enable real-time rendering by making the environment in human render mode. In this case, the display_state function will be called automatically at every step:
+The argument is the number of milliseconds to display the state before continuing execution.
+
+This is the simplest way to visualize the environments, unless you need to handle user input during execution in which case you'd need to use the GUI class.  
+You can also enable real-time rendering by making the environment in human render mode. In this case, `display_state()` will be called automatically at every step:
 ```python
 env = gym.make('MinAtar/Breakout-v1', render_mode='human')
 env.reset()
 env.step(1)
 ```
 
-
 ### Using GUI class
-We also include a slightly more complex GUI to visualize the environments and optionally handle user input. This GUI is used in examples/human_play.py to play as a human and examples/agent_play.py to visualize the performance of trained agents. To use the GUI you can import it in your code with:
+We also include a slightly more complex GUI to visualize the environments and optionally handle user input. This GUI is used in `examples/human_play.py` to play as a human and `examples/agent_play.py` to visualize the performance of trained agents.  
+To use the GUI, import it in your code with:
 ```python
 from minatar.gui import GUI
-```
-Initialize an instance of the GUI class by providing a name for the window, and the integer number of input channels for the MinAtar environment to be visualized. For example:
-```python
+env = Environment('breakout')
 GUI(env.game_name(), env.n_channels)
-
 ```
-where env is an instance of minatar.Environment. The recommended way to use the GUI for visualizing an environment is to include all your agent-environment interaction code in a function that looks something like this:
+
+The recommended way to use the GUI for visualizing an environment is to include all your agent-environment interaction code in a function that looks like this:
 ```python
 def func():
     gui.display_state(env.state())
-    #One step of agent-environment interaction here
+    # one step of agent-environment interaction here
     gui.update(50, func)
 ```
-The first argument to gui.update is the time to hold the current frame before continuing. The second argument specifies the function to call after that time has elapsed. In the example above the call to update simply calls func again, effectively continuing the agent-environment interaction loop. Note that this is not a recursive call, as the call to func in update is made in a new thread, while the execution of the current thread continues.
+The first argument to `gui.update` is the time to hold the current frame before continuing. The second argument specifies the function to call after that time has elapsed. In the example above the call to update simply calls `func` again, effectively continuing the agent-environment interaction loop. Note that this is not a recursive call, as the call to `func` in update is made in a new thread, while the execution of the current thread continues.
 
 To begin the execution you can use:
 ```python
 gui.update(0, func)
 gui.run()
 ```
-This will enter the agent environment interaction loop and then run the GUI thread, gui.run() will block until gui.quit() is called. To handle user input you can use gui.overwrite_key_handle(on_key_event, on_release_event). The arguments are functions to be called whenever a key is pressed, and released respectively. For an example of how to do this see examples/human_play.py.
+This will enter the agent environment interaction loop and then run the GUI thread, `gui.run()` will block until `gui.quit()` is called. To handle user input you can use `gui.overwrite_key_handle(on_key_event, on_release_event)`. The arguments are functions to be called whenever a key is pressed, and released respectively. For an example of how to do this see `examples/human_play.py`.
 
-## Support for Other Languages
-
+## MinAtar in Other Languages
 - [Julia](https://github.com/mkschleg/MinAtar.jl/blob/master/README.md)
 - [JAX](https://github.com/RobertTLange/gymnax)
 
 ## Results
 The following plots display results for DQN (Mnih et al., 2015) and actor-critic (AC) with eligibility traces. Our DQN agent uses a significantly smaller network compared to that of Mnih et al., 2015. We display results for DQN with and without experience reply. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. The top plots display the sensitivity of final performance to the step-size parameter, while the bottom plots display the average return during training as a function of training frames. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176).
 
-**Note, the currently displayed results for Seaquest are for the version in MinAtar v1.0.10 and lower, where a bug caused the oxygen bar to flash to full one step before running out**. Results for the updated version may be different.
+> The currently displayed results for Seaquest are for MinAtar v1.0.10 and lower, where a bug caused the oxygen bar to flash to full one step before running out. Results with the latest version may be different.
 
 <img align="center" src="img/sensitivity_curves.gif" width=800>
 <img align="center" src="img/learning_curves.gif" width=800>
@@ -179,11 +183,9 @@ The player controls a cannon at the bottom of the screen and can shoot bullets u
 [Video](https://www.youtube.com/watch?v=W-9Ru-RDEoI)
 
 ## Citing MinAtar
-If you use MinAtar in your research please cite the following:
+If you use MinAtar in your research please cite the following paper:
 
 Young, K. Tian, T. (2019). MinAtar: An Atari-Inspired Testbed for Thorough and Reproducible Reinforcement Learning Experiments.  *arXiv preprint arXiv:1903.03176*.
-
-In BibTeX format:
 
 ```
 @Article{young19minatar,
