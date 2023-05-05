@@ -21,7 +21,7 @@ pip install minatar
 ```
 If you'd like to install MinAtar from the github repo instead (for example if you'd like to modify the code), please follow the steps below:
 
-1. Clone the repo: 
+1. Clone the repo:
 ```bash
 git clone https://github.com/kenjyoung/MinAtar.git
 ```
@@ -84,16 +84,29 @@ pip install minatar==1.0.11
 
 ## Visualizing the Environments
 We provide 2 ways to visualize a MinAtar environment.
+
 ### Using Environment.display_state()
 The Environment class includes a simple visualizer using matplotlib in the display_state function. To use this simply call:
 ```python
+env = Environment('breakout')
 env.display_state(50)
 ```
-where env is an instance of MinAtar.Environment. The argument is the number of milliseconds to display the state before continuing execution. To close the resulting display window call:
+or, if you're using the gym interface:
 ```python
-env.close_display()
+env = gym.make('Minatar/Breakout-v1')
+env.game.display_state(50)
 ```
-This is the simplest way to visualize the environments, unless you need to handle user input during execution in which case you could use the provided GUI class.
+The argument is the number of milliseconds to display the state before continuing execution. To close the resulting display window call:
+```python
+env.game.close_display()
+```
+This is the simplest way to visualize the environments, unless you need to handle user input during execution in which case you could use the provided GUI class.  
+With the gym interface, you can also enable real-time rendering by making the environment in human render mode. In this case, the display_state function will be called automatically at every step:
+```python
+env = gym.make('MinAtar/Breakout-v1', render_mode='human')
+env.reset()
+env.step(1)
+```
 
 
 ### Using GUI class
@@ -101,12 +114,12 @@ We also include a slightly more complex GUI to visualize the environments and op
 ```python
 from minatar.gui import GUI
 ```
-Initialize an instance of the GUI class by providing a name for the window, and the integer number of input channels for the minatar environment to be visualized. For example:
+Initialize an instance of the GUI class by providing a name for the window, and the integer number of input channels for the MinAtar environment to be visualized. For example:
 ```python
 GUI(env.game_name(), env.n_channels)
 
 ```
-where env is an instance of minatar.Environment. The recommended way to use the GUI for visualizing an environment is to include all you're agent-environment interaction code in a function that looks something like this:
+where env is an instance of minatar.Environment. The recommended way to use the GUI for visualizing an environment is to include all your agent-environment interaction code in a function that looks something like this:
 ```python
 def func():
     gui.display_state(env.state())
@@ -128,7 +141,7 @@ This will enter the agent environment interaction loop and then run the GUI thre
 - [JAX](https://github.com/RobertTLange/gymnax)
 
 ## Results
-The following plots display results for DQN (Mnih et al., 2015) and actor-critic (AC) with eligibility traces. Our DQN agent uses a significantly smaller network compared to that of Mnih et al., 2015. We display results for DQN with and without experience reply. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. The top plots display the sensitivity of final performance to the step-size parameter, while the bottom plots display the average return during training as a function of training frames. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176). 
+The following plots display results for DQN (Mnih et al., 2015) and actor-critic (AC) with eligibility traces. Our DQN agent uses a significantly smaller network compared to that of Mnih et al., 2015. We display results for DQN with and without experience reply. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. The top plots display the sensitivity of final performance to the step-size parameter, while the bottom plots display the average return during training as a function of training frames. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176).
 
 **Note, the currently displayed results for Seaquest are for the version in MinAtar v1.0.10 and lower, where a bug caused the oxygen bar to flash to full one step before running out**. Results for the updated version may be different.
 
