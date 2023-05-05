@@ -9,15 +9,15 @@ import numpy as np
 #####################################################################################################################
 # Env
 #
-# The player controls a paddle on the bottom of the screen and must bounce a ball tobreak 3 rows of bricks along the 
-# top of the screen. A reward of +1 is given for each brick broken by the ball.  When all bricks are cleared another 3 
-# rows are added. The ball travels only along diagonals, when it hits the paddle it is bounced either to the left or 
+# The player controls a paddle on the bottom of the screen and must bounce a ball tobreak 3 rows of bricks along the
+# top of the screen. A reward of +1 is given for each brick broken by the ball.  When all bricks are cleared another 3
+# rows are added. The ball travels only along diagonals, when it hits the paddle it is bounced either to the left or
 # right depending on the side of the paddle hit, when it hits a wall or brick it is reflected. Termination occurs when
 # the ball hits the bottom of the screen. The balls direction is indicated by a trail channel.
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = None, random_state = None):
+    def __init__(self, ramping=None):
         self.channels ={
             'paddle':0,
             'ball':1,
@@ -25,10 +25,7 @@ class Env:
             'brick':3,
         }
         self.action_map = ['n','l','u','r','d','f']
-        if random_state is None:
-            self.random = np.random.RandomState()
-        else:
-            self.random = random_state
+        self.random = np.random.RandomState()
         self.reset()
 
     # Update environment according to agent action
@@ -36,7 +33,7 @@ class Env:
         r = 0
         if(self.terminal):
             return r, self.terminal
-            
+
         a = self.action_map[a]
 
         # Resolve player action
@@ -100,7 +97,7 @@ class Env:
 
     # Query the current level of the difficulty ramp, difficulty does not ramp in this game, so return None
     def difficulty_ramp(self):
-        return None  
+        return None
 
     # Process the game-state into the 10x10xn state provided to the agent and return
     def state(self):
@@ -114,7 +111,7 @@ class Env:
     # Reset to start state for new episode
     def reset(self):
         self.ball_y = 3
-        ball_start = self.random.choice(2)
+        ball_start = self.random.randint(2)
         self.ball_x, self.ball_dir = [(0,2),(9,3)][ball_start]
         self.pos = 4
         self.brick_map = np.zeros((10,10))

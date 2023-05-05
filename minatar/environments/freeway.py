@@ -17,18 +17,18 @@ time_limit = 2500
 #####################################################################################################################
 # Env
 #
-# The player begins at the bottom of the screen and motion is restricted to traveling up and down. Player speed is 
-# also restricted such that the player can only move every 3 frames. A reward of +1 is given when the player reaches 
-# the top of the screen, at which point the player is returned to the bottom. Cars travel horizontally on the screen 
-# and teleport to the other side when the edge is reached. When hit by a car, the player is returned to the bottom of 
-# the screen. Car direction and speed is indicated by 5 trail channels, the location of the trail gives direction 
-# while the specific channel indicates how frequently the car moves (from once every frame to once every 5 frames). 
-# Each time the player successfully reaches the top of the screen, the car speeds are randomized. Termination occurs 
+# The player begins at the bottom of the screen and motion is restricted to traveling up and down. Player speed is
+# also restricted such that the player can only move every 3 frames. A reward of +1 is given when the player reaches
+# the top of the screen, at which point the player is returned to the bottom. Cars travel horizontally on the screen
+# and teleport to the other side when the edge is reached. When hit by a car, the player is returned to the bottom of
+# the screen. Car direction and speed is indicated by 5 trail channels, the location of the trail gives direction
+# while the specific channel indicates how frequently the car moves (from once every frame to once every 5 frames).
+# Each time the player successfully reaches the top of the screen, the car speeds are randomized. Termination occurs
 # after 2500 frames have elapsed.
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = None, random_state = None):
+    def __init__(self, ramping=None):
         self.channels ={
             'chicken':0,
             'car':1,
@@ -39,10 +39,7 @@ class Env:
             'speed5':6,
         }
         self.action_map = ['n','l','u','r','d','f']
-        if random_state is None:
-            self.random = np.random.RandomState()
-        else:
-            self.random = random_state
+        self.random = np.random.RandomState()
         self.reset()
 
     # Update environment according to agent action
@@ -50,7 +47,7 @@ class Env:
         r = 0
         if(self.terminal):
             return r, self.terminal
-            
+
         a = self.action_map[a]
 
         if(a=='u' and self.move_timer==0):
@@ -91,7 +88,7 @@ class Env:
 
     # Query the current level of the difficulty ramp, difficulty does not ramp in this game, so return None
     def difficulty_ramp(self):
-        return None        
+        return None
 
     # Process the game-state into the 10x10xn state provided to the agent and return
     def state(self):
@@ -120,7 +117,7 @@ class Env:
     # Randomize car speeds and directions, also reset their position if initialize=True
     def _randomize_cars(self, initialize=False):
         speeds = self.random.randint(1,6,8)
-        directions = self.random.choice([-1,1],8)
+        directions = np.sign(self.random.rand(8) - 0.5).astype(int)
         speeds*=directions
         if(initialize):
             self.cars = []

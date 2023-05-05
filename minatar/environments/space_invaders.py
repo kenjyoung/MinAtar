@@ -16,20 +16,20 @@ enemy_shot_interval = 10
 
 
 #####################################################################################################################
-# Env 
+# Env
 #
-# The player controls a cannon at the bottom of the screen and can shoot bullets upward at a cluster of aliens above. 
-# The aliens move across the screen until one of them hits the edge, at which point they all move down and switch 
-# directions. The current alien direction is indicated by 2 channels (one for left and one for right) one of which is 
-# active at the location of each alien. A reward of +1 is given each time an alien is shot, and that alien is also 
-# removed. The aliens will also shoot bullets back at the player. When few aliens are left, alien speed will begin to 
-# increase. When only one alien is left, it will move at one cell per frame. When a wave of aliens is fully cleared a 
-# new one will spawn which moves at a slightly faster speed than the last. Termination occurs when an alien or bullet 
+# The player controls a cannon at the bottom of the screen and can shoot bullets upward at a cluster of aliens above.
+# The aliens move across the screen until one of them hits the edge, at which point they all move down and switch
+# directions. The current alien direction is indicated by 2 channels (one for left and one for right) one of which is
+# active at the location of each alien. A reward of +1 is given each time an alien is shot, and that alien is also
+# removed. The aliens will also shoot bullets back at the player. When few aliens are left, alien speed will begin to
+# increase. When only one alien is left, it will move at one cell per frame. When a wave of aliens is fully cleared a
+# new one will spawn which moves at a slightly faster speed than the last. Termination occurs when an alien or bullet
 # hits the player.
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = True, random_state=None):
+    def __init__(self, ramping=True):
         self.channels ={
             'cannon':0,
             'alien':1,
@@ -40,10 +40,7 @@ class Env:
         }
         self.action_map = ['n','l','u','r','d','f']
         self.ramping = ramping
-        if random_state is None:
-            self.random = np.random.RandomState()
-        else:
-            self.random = random_state
+        self.random = np.random.RandomState()
         self.reset()
 
     # Update environment according to agent action
@@ -97,7 +94,7 @@ class Env:
         r+=np.sum(kill_locations)
         self.alien_map[kill_locations] = self.f_bullet_map[kill_locations] = 0
 
-        
+
         # Update various timers
         self.shot_timer -= self.shot_timer>0
         self.alien_move_timer-=1
@@ -121,7 +118,7 @@ class Env:
     # Query the current level of the difficulty ramp, could be used as additional input to agent for example
     def difficulty_ramp(self):
         return self.ramp_index
-            
+
     # Process the game-state into the 10x10xn state provided to the agent and return
     def state(self):
         state = np.zeros((10,10,len(self.channels)),dtype=bool)

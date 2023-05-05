@@ -22,25 +22,25 @@ diver_move_interval = 5
 
 
 #####################################################################################################################
-# Env 
+# Env
 #
-# The player controls a submarine consisting of two cells, front and back, to allow direction to be determined. The 
-# player can also fire bullets from the front of the submarine. Enemies consist of submarines and fish, distinguished 
-# by the fact that submarines shoot bullets and fish do not. A reward of +1 is given each time an enemy is struck by 
-# one of the player's bullets, at which point the enemy is also removed. There are also divers which the player can 
-# move onto to pick up, doing so increments a bar indicated by another channel along the bottom of the screen. The 
-# player also has a limited supply of oxygen indicated by another bar in another channel. Oxygen degrades over time, 
-# and is replenished whenever the player moves to the top of the screen as long as the player has at least one rescued 
-# diver on board. The player can carry a maximum of 6 divers. When surfacing with less than 6, one diver is removed. 
-# When surfacing with 6, all divers are removed and a reward is given for each active cell in the oxygen bar. Each 
-# time the player surfaces the difficulty is increased by increasing the spawn rate and movement speed of enemies. 
-# Termination occurs when the player is hit by an enemy fish, sub or bullet; or when oxygen reached 0; or when the 
-# player attempts to surface with no rescued divers. Enemy and diver directions are indicated by a trail channel 
+# The player controls a submarine consisting of two cells, front and back, to allow direction to be determined. The
+# player can also fire bullets from the front of the submarine. Enemies consist of submarines and fish, distinguished
+# by the fact that submarines shoot bullets and fish do not. A reward of +1 is given each time an enemy is struck by
+# one of the player's bullets, at which point the enemy is also removed. There are also divers which the player can
+# move onto to pick up, doing so increments a bar indicated by another channel along the bottom of the screen. The
+# player also has a limited supply of oxygen indicated by another bar in another channel. Oxygen degrades over time,
+# and is replenished whenever the player moves to the top of the screen as long as the player has at least one rescued
+# diver on board. The player can carry a maximum of 6 divers. When surfacing with less than 6, one diver is removed.
+# When surfacing with 6, all divers are removed and a reward is given for each active cell in the oxygen bar. Each
+# time the player surfaces the difficulty is increased by increasing the spawn rate and movement speed of enemies.
+# Termination occurs when the player is hit by an enemy fish, sub or bullet; or when oxygen reached 0; or when the
+# player attempts to surface with no rescued divers. Enemy and diver directions are indicated by a trail channel
 # active in their previous location to reduce partial observability.
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = True, random_state = None):
+    def __init__(self, ramping=True):
         self.channels ={
             'sub_front':0,
             'sub_back':1,
@@ -55,10 +55,7 @@ class Env:
         }
         self.action_map = ['n','l','u','r','d','f']
         self.ramping = ramping
-        if random_state is None:
-            self.random = np.random.RandomState()
-        else:
-            self.random = random_state
+        self.random = np.random.RandomState()
         self.reset()
 
     # Update environment according to agent action
@@ -207,7 +204,7 @@ class Env:
                     r+=self._surface()
         return r, self.terminal
 
-    # Called when player hits surface (top row) if they have no divers, this ends the game, 
+    # Called when player hits surface (top row) if they have no divers, this ends the game,
     # if they have 6 divers this gives reward proportional to the remaining oxygen and restores full oxygen
     # otherwise this reduces the number of divers and restores full oxygen
     def _surface(self):
@@ -230,10 +227,10 @@ class Env:
     # Spawn an enemy fish or submarine in random row and random direction,
     # if the resulting row and direction would lead to a collision, do nothing instead
     def _spawn_enemy(self):
-        lr = self.random.choice([True,False])
-        is_sub = self.random.choice([True,False], p=[1/3,2/3])
+        lr = self.random.rand() < 1/2
+        is_sub = self.random.rand() < 1/3
         x = 0 if lr else 9
-        y = self.random.choice(np.arange(1,9))
+        y = self.random.randint(low=1, high=9)
 
         # Do not spawn in same row an opposite direction as existing
         if(any([z[1]==y and z[2]!=lr for z in self.e_subs+self.e_fish])):
@@ -245,9 +242,9 @@ class Env:
 
     # Spawn a diver in random row with random direction
     def _spawn_diver(self):
-        lr = self.random.choice([True,False])
+        lr = self.random.rand() < 1/2
         x = 0 if lr else 9
-        y = self.random.choice(np.arange(1,9))
+        y = self.random.randint(low=1, high=9)
         self.divers+=[[x,y,lr,diver_move_interval]]
 
     # Query the current level of the difficulty ramp, could be used as additional input to agent for example

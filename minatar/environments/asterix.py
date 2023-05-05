@@ -17,7 +17,7 @@ shot_cool_down = 5
 
 
 #####################################################################################################################
-# Env 
+# Env
 #
 # The player can move freely along the 4 cardinal directions. Enemies and treasure spawn from the sides. A reward of
 # +1 is given for picking up treasure. Termination occurs if the player makes contact with an enemy. Enemy and
@@ -26,7 +26,7 @@ shot_cool_down = 5
 #
 #####################################################################################################################
 class Env:
-    def __init__(self, ramping = True, random_state = None):
+    def __init__(self, ramping=True):
         self.channels ={
             'player':0,
             'enemy':1,
@@ -35,10 +35,7 @@ class Env:
         }
         self.action_map = ['n','l','u','r','d','f']
         self.ramping = ramping
-        if random_state is None:
-            self.random = np.random.RandomState()
-        else:
-            self.random = random_state
+        self.random = np.random.RandomState()
         self.reset()
 
     # Update environment according to agent action
@@ -46,7 +43,7 @@ class Env:
         r = 0
         if(self.terminal):
             return r, self.terminal
-            
+
         a = self.action_map[a]
 
         # Spawn enemy if timer is up
@@ -65,9 +62,9 @@ class Env:
             self.player_y = min(8, self.player_y+1)
 
         # Update entities
-        for i in range(len(self.entities)):     
-            x = self.entities[i]    
-            if(x is not None): 
+        for i in range(len(self.entities)):
+            x = self.entities[i]
+            if(x is not None):
                 if(x[0:2]==[self.player_x,self.player_y]):
                     if(self.entities[i][3]):
                         self.entities[i] = None
@@ -109,13 +106,13 @@ class Env:
 
     # Spawn a new enemy or treasure at a random location with random direction (if all rows are filled do nothing)
     def _spawn_entity(self):
-        lr = self.random.choice([True,False])
-        is_gold = self.random.choice([True,False], p=[1/3,2/3])
+        lr = self.random.rand() < 1/2
+        is_gold = self.random.rand() < 1/3
         x = 0 if lr else 9
         slot_options = [i for i in range(len(self.entities)) if self.entities[i]==None]
         if(not slot_options):
             return
-        slot = self.random.choice(slot_options)
+        slot = slot_options[self.random.randint(len(slot_options))]
         self.entities[slot] = [x,slot+1,lr,is_gold]
 
     # Query the current level of the difficulty ramp, could be used as additional input to agent for example
