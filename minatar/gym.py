@@ -67,8 +67,6 @@ class BaseEnv(gym.Env):
         elif self.render_mode == "rgb_array": # use the same color palette of Environment.display_state
             state = self.game.state()
             n_channels = state.shape[-1]
-            mpl = __import__('matplotlib.colors', globals(), locals())
-            colors = mpl.colors
             sns = __import__('seaborn', globals(), locals())
             cmap = sns.color_palette("cubehelix", n_channels)
             cmap.insert(0, (0,0,0))
