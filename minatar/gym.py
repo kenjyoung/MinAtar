@@ -74,9 +74,6 @@ class BaseEnv(gym.Env):
                 state * np.reshape(np.arange(n_channels) + 1, (1,1,-1)), 2)
             rgb_array = np.stack(cmap)[numerical_state]
             return rgb_array
-        else:
-            raise NotImplementedError(
-                f'render mode must be either array, human, rgb_array (received )')
 
     def close(self):
         if self.game.visualized:
