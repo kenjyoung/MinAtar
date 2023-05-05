@@ -29,7 +29,7 @@ setup(
     description='A miniaturized version of the Arcade Learning Environment.',
     url='https://github.com/kenjyoung/MinAtar',
     author='Kenny Young',
-    author_email='kjyoung@ualberta.com',
+    author_email='kjyoung@ualberta.ca',
     license='GPL',
     packages=packages,
     entry_points=entry_points,
