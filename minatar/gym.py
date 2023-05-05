@@ -1,8 +1,15 @@
 # Adapted from https://github.com/qlan3/gym-games
-import gymnasium as gym
-from gymnasium import spaces
-from gymnasium.envs import register
-import seaborn as sns
+import numpy as np
+import gym
+from gym import spaces
+from gym.envs import register
+
+try:
+    import seaborn as sns
+except:
+    import logging
+    logging.warning("Cannot import seaborn."
+        "Will not be able to train from pixel observations.")
 
 from minatar import Environment
 
@@ -30,6 +37,8 @@ class BaseEnv(gym.Env):
     def step(self, action):
         action = self.action_set[action]
         reward, done = self.game.act(action)
+        if self.render_mode == "human":
+            self.render()
         return self.game.state(), reward, done, False, {}
 
     def seed(self, seed=None):
@@ -39,6 +48,8 @@ class BaseEnv(gym.Env):
         if seed is not None:
             self.seed(seed)
         self.game.reset()
+        if self.render_mode == "human":
+            self.render()
         return self.game.state(), {}
 
     def render(self):
@@ -51,7 +62,7 @@ class BaseEnv(gym.Env):
             return
         if self.render_mode == "array":
             return self.game.state()
-        elif mode == "human":
+        elif self.render_mode == "human":
             self.game.display_state(self.display_time)
         elif self.render_mode == "rgb_array": # use the same color palette of Environment.display_state
             state = self.game.state()
