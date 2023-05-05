@@ -1,8 +1,8 @@
 # Adapted from https://github.com/qlan3/gym-games
 import numpy as np
-import gym
-from gym import spaces
-from gym.envs import register
+import gymnasium as gym
+from gymnasium import spaces
+from gymnasium.envs.registration import register
 
 try:
     import seaborn as sns
@@ -86,10 +86,10 @@ def register_envs():
         register(
             id="MinAtar/{}-v0".format(name),
             entry_point="minatar.gym:BaseEnv",
-            kwargs=dict(game=game, display_time=50, use_minimal_action_set=False),
+            kwargs=dict(game=game, use_minimal_action_set=False),
         )
         register(
             id="MinAtar/{}-v1".format(name),
             entry_point="minatar.gym:BaseEnv",
-            kwargs=dict(game=game, display_time=50, use_minimal_action_set=True),
+            kwargs=dict(game=game, use_minimal_action_set=True),
         )

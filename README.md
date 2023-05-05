@@ -72,8 +72,8 @@ Finally, we provide a simple implementations of DQN in `dqn.py` and online actor
 ## OpenAI Gym Wrapper
 MinAtar is fully compatible with the latest OpenAI Gym version (0.26).
 A Gym environment can be constructed as follows:
-```bash
-import gym
+```python
+import gymnasium as gym
 env = gym.make('MinAtar/<game-id>')
 ````
 The following game IDs ara available: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1.  
@@ -100,6 +100,7 @@ env.close_display()
 ```
 or, if you're using the gym interface:
 ```python
+import gymnasium as gym
 env = gym.make('MinAtar/Breakout-v1')
 env.game.display_state(50)
 # train, do steps, ...
