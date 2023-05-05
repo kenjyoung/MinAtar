@@ -6,6 +6,14 @@
 from importlib import import_module
 import numpy as np
 
+try:
+    from matplotlib import pyplot as plt
+    from matplotlib import colors
+    import seaborn as sns
+except:
+    import logging
+    logging.warning("Cannot import matplotlib and/or seaborn."
+        "Will not be able to render the environment.")
 
 #####################################################################################################################
 # Environment
@@ -67,17 +75,9 @@ class Environment:
     # Display the current environment state for time milliseconds using matplotlib
     def display_state(self, time=50):
         if not self.visualized:
-            global plt
-            global colors
-            global sns
-            mpl = __import__('matplotlib.pyplot', globals(), locals())
-            plt = mpl.pyplot
-            mpl = __import__('matplotlib.colors', globals(), locals())
-            colors = mpl.colors
-            sns = __import__('seaborn', globals(), locals())
             self.cmap = sns.color_palette("cubehelix", self.n_channels)
-            self.cmap.insert(0,(0,0,0))
-            self.cmap=colors.ListedColormap(self.cmap)
+            self.cmap.insert(0, (0,0,0))
+            self.cmap = colors.ListedColormap(self.cmap)
             bounds = [i for i in range(self.n_channels+2)]
             self.norm = colors.BoundaryNorm(bounds, self.n_channels+1)
             _, self.ax = plt.subplots(1,1)
@@ -88,9 +88,11 @@ class Environment:
             plt.show(block=False)
             self.closed = False
         state = self.env.state()
-        numerical_state = np.amax(state*np.reshape(np.arange(self.n_channels)+1,(1,1,-1)),2)+0.5
-        self.ax.imshow(numerical_state, cmap=self.cmap, norm=self.norm, interpolation='none')
-        plt.pause(time/1000)
+        numerical_state = np.amax(
+            state * np.reshape(np.arange(self.n_channels) + 1, (1,1,-1)), 2) + 0.5
+        self.ax.imshow(
+            numerical_state, cmap=self.cmap, norm=self.norm, interpolation='none')
+        plt.pause(time / 1000)
         plt.cla()
 
     def close_display(self):

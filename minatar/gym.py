@@ -2,7 +2,13 @@
 import gym
 from gym import spaces
 from gym.envs import register
-import seaborn as sns
+
+try:
+    import seaborn as sns
+except:
+    import logging
+    logging.warning("Cannot import seaborn."
+        "Will not be able to train from pixel observations.")
 
 from minatar import Environment
 
