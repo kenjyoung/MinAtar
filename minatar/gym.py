@@ -32,6 +32,8 @@ class BaseEnv(gym.Env):
     def step(self, action):
         action = self.action_set[action]
         reward, done = self.game.act(action)
+        if self.render_mode == "human":
+            self.render()
         return self.game.state(), reward, done, False, {}
 
     def reset(self, seed=None, options=None):
@@ -42,6 +44,8 @@ class BaseEnv(gym.Env):
                 **self.game_kwargs
             )
         self.game.reset()
+        if self.render_mode == "human":
+            self.render()
         return self.game.state(), {}
 
     def seed(self, seed=None):
