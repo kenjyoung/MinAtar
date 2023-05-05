@@ -8,7 +8,7 @@ from minatar import Environment
 
 
 class BaseEnv(gym.Env):
-    metadata = {"render.modes": ["human", "array"]}
+    metadata = {"render_modes": ["human", "array", "rgb_array"]}
 
     def __init__(self, game, render_mode=None, display_time=50,
                 use_minimal_action_set=False, **kwargs):
