@@ -1,14 +1,14 @@
 # Adapted from https://github.com/qlan3/gym-games
-import gym
-from gym import spaces
-from gym.envs import register
+import gymnasium as gym
+from gymnasium import spaces
+from gymnasium.envs import register
 import seaborn as sns
 
 from minatar import Environment
 
 
 class BaseEnv(gym.Env):
-    metadata = {"render.modes": ["human", "array"]}
+    metadata = {"render_modes": ["human", "array", "rgb_array"]}
 
     def __init__(self, game, render_mode=None, display_time=50,
                 use_minimal_action_set=False, **kwargs):
@@ -73,12 +73,12 @@ def register_envs():
     for game in ["asterix", "breakout", "freeway", "seaquest", "space_invaders"]:
         name = game.title().replace('_', '')
         register(
-            id="{}-v0".format(name),
+            id="MinAtar/{}-v0".format(name),
             entry_point="minatar.gym:BaseEnv",
             kwargs=dict(game=game, display_time=50, use_minimal_action_set=False),
         )
         register(
-            id="{}-v1".format(name),
+            id="MinAtar/{}-v1".format(name),
             entry_point="minatar.gym:BaseEnv",
             kwargs=dict(game=game, display_time=50, use_minimal_action_set=True),
         )
