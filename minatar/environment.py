@@ -20,7 +20,7 @@ class Environment:
         env_module = import_module('minatar.environments.' + env_name)
         self.random = np.random.RandomState()
         self.env_name = env_name
-        self.env = env_module.Env(ramping = difficulty_ramping, random_state = self.random)
+        self.env = env_module.Env(ramping=difficulty_ramping)
         self.n_channels = self.env.state_shape()[2]
         self.sticky_action_prob = sticky_action_prob
         self.last_action = 0
