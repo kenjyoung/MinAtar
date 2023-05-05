@@ -13,7 +13,7 @@ MinAtar is a testbed for AI agents which implements miniaturized versions of sev
 
 
 ## Quick Start
-To use MinAtar, you need `python3` installed, make sure `pip` is also up to date.  
+To use MinAtar, you need `python3` installed (make sure `pip` is also up to date).  
 To run the included `DQN` and `AC_lambda` examples, you need `PyTorch`.
 
 If you want to use a virtual environment, before installing MinAtar run
@@ -24,10 +24,7 @@ source venv/bin/activate
 pip install --upgrade pip
 ```
 
-Then you can install MinAtar either PyPi repository or from source.
-Then either install it from
-
-If you'd like to install MinAtar from the github repo instead (for example if you'd like to modify the code), please follow the steps below:
+Then you can install MinAtar either with PyPi repository or from source.
 
 1. Via PyPi:
 ```bash
@@ -60,7 +57,7 @@ The program will run 1000 episodes with a random policy and report the mean and 
 Avg Return: 0.5+/-0.023194827009486406
 ```
 
-You can replace `breakout` with one of the five available games: asterix, breakout, freeway, seaquest, and space_invaders.
+You can replace `breakout` with one of the five available games: `asterix`, `breakout`, `freeway`, `seaquest`, and `space_invaders`.
 See the Games section below for details of each game.
 
 To play a game as a human, run
@@ -77,15 +74,14 @@ MinAtar is fully compatible with the latest OpenAI Gym version (0.26).
 A Gym environment can be constructed as follows:
 ```bash
 import gym
-env = gym.make('MinAtar/<game>')
+env = gym.make('MinAtar/<game-id>')
 ````
-where game is one of: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1.  
+The following game IDs ara available: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1.  
 For each game, in the v0 versions the action set has all 6 available actions (some of which are equivalent to no-op depending on the game),
 while in the v1 versions the action set is reduced to just the minimal actions for each game.  
 Note that the results included in this repo and the associated paper use the full action set of 6 actions.
 
-**NOTE**  
-If you want to use the old Gym API (without the `truncated` flag, and with the old `reset()` and `seed()` methods),
+> If you want to use the old Gym API (without the `truncated` flag, and with the old `reset()` and `seed()` methods),
 install MinAtar 1.0.11 by running:
 ```bash
 pip install minatar==1.0.11
@@ -95,7 +91,7 @@ pip install minatar==1.0.11
 We provide 2 ways to visualize a MinAtar environment.
 
 ### Using Environment.display_state()
-The Environment class includes a simple visualizer using matplotlib in the `display_state()` function. To use this simply call:
+The Environment class includes a simple visualizer using matplotlib in the `display_state()` function. To use it simply call:
 ```python
 env = Environment('breakout')
 env.display_state(50)
@@ -151,7 +147,7 @@ This will enter the agent environment interaction loop and then run the GUI thre
 ## Results
 The following plots display results for DQN (Mnih et al., 2015) and actor-critic (AC) with eligibility traces. Our DQN agent uses a significantly smaller network compared to that of Mnih et al., 2015. We display results for DQN with and without experience reply. Our AC agent uses a similar architecture to DQN, but does not use experience replay. We display results for two values of the trace decay parameter, 0.8 and 0.0.  Each curve is the average of 30 independent runs with different random seeds. The top plots display the sensitivity of final performance to the step-size parameter, while the bottom plots display the average return during training as a function of training frames. For further information, see the paper on MinAtar available [here](https://arxiv.org/abs/1903.03176).
 
-**NOTE: the currently displayed results for Seaquest are for MinAtar v1.0.10 and lower, where a bug caused the oxygen bar to flash to full one step before running out.** Results with the latest version may be different.
+> The currently displayed results for Seaquest are for MinAtar v1.0.10 and lower, where a bug caused the oxygen bar to flash to full one step before running out. Results with the latest version may be different.
 
 <img align="center" src="img/sensitivity_curves.gif" width=800>
 <img align="center" src="img/learning_curves.gif" width=800>
