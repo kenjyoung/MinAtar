@@ -2,6 +2,7 @@
 import gym
 from gym import spaces
 from gym.envs import register
+import seaborn as sns
 
 from minatar import Environment
 
@@ -9,12 +10,12 @@ from minatar import Environment
 class BaseEnv(gym.Env):
     metadata = {"render.modes": ["human", "array"]}
 
-    def __init__(self, game, display_time=50, use_minimal_action_set=False, **kwargs):
-        self.game_name = game
+    def __init__(self, game, render_mode=None, display_time=50,
+                use_minimal_action_set=False, **kwargs):
+        self.render_mode = render_mode
         self.display_time = display_time
 
-        self.game_kwargs = kwargs
-        self.seed()
+        self.game = Environment(env_name=game, **kwargs)
 
         if use_minimal_action_set:
             self.action_set = self.game.minimal_action_set()
@@ -31,29 +32,36 @@ class BaseEnv(gym.Env):
         reward, done = self.game.act(action)
         return self.game.state(), reward, done, False, {}
 
+    def seed(self, seed=None):
+        self.game.seed(seed)
+
     def reset(self, seed=None, options=None):
-        if(seed is not None):
-            self.game = Environment(
-                env_name=self.game_name,
-                random_seed=seed,
-                **self.game_kwargs
-            )
+        if seed is not None:
+            self.seed(seed)
         self.game.reset()
         return self.game.state(), {}
 
-    def seed(self, seed=None):
-        self.game = Environment(
-            env_name=self.game_name,
-            random_seed=seed,
-            **self.game_kwargs
-        )
-        return seed
-
-    def render(self, mode="human"):
-        if mode == "array":
+    def render(self):
+        if self.render_mode is None:
+            gym.logger.warn(
+                "You are calling render method without specifying any render mode. "
+                "You can specify the render_mode at initialization, "
+                f'e.g. gym("{self.spec.id}", render_mode="rgb_array")'
+            )
+            return
+        if self.render_mode == "array":
             return self.game.state()
         elif mode == "human":
             self.game.display_state(self.display_time)
+        elif self.render_mode == "rgb_array": # use the same color palette of Environment.display_state
+            state = self.game.state()
+            n_channels = state.shape[-1]
+            cmap = sns.color_palette("cubehelix", n_channels)
+            cmap.insert(0, (0,0,0))
+            numerical_state = np.amax(
+                state * np.reshape(np.arange(n_channels) + 1, (1,1,-1)), 2)
+            rgb_array = np.stack(cmap)[numerical_state]
+            return rgb_array
 
     def close(self):
         if self.game.visualized:

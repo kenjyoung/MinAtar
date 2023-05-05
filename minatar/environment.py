@@ -11,13 +11,14 @@ import numpy as np
 # Environment
 #
 # Wrapper for all the specific game environments. Imports the environment specified by the user and then acts as a
-# minimal interface. Also defines code for displaying the environment for a human user. 
+# minimal interface. Also defines code for displaying the environment for a human user.
 #
 #####################################################################################################################
 class Environment:
-    def __init__(self, env_name, sticky_action_prob = 0.1, difficulty_ramping = True, random_seed = None):
-        env_module = import_module('minatar.environments.'+env_name)
-        self.random = np.random.RandomState(random_seed)
+    def __init__(self, env_name, sticky_action_prob=0.1,
+                difficulty_ramping=True):
+        env_module = import_module('minatar.environments.' + env_name)
+        self.random = np.random.RandomState()
         self.env_name = env_name
         self.env = env_module.Env(ramping = difficulty_ramping, random_state = self.random)
         self.n_channels = self.env.state_shape()[2]
@@ -26,9 +27,15 @@ class Environment:
         self.visualized = False
         self.closed = False
 
+    # Seeding numpy random for reproducibility
+    def seed(self, seed=None):
+        if seed is not None:
+            self.random = np.random.RandomState(seed)
+            self.env.random = self.random
+
     # Wrapper for env.act
     def act(self, a):
-        if(self.random.rand()<self.sticky_action_prob):
+        if self.random.rand() < self.sticky_action_prob:
             a = self.last_action
         self.last_action = a
         return self.env.act(a)
@@ -59,7 +66,7 @@ class Environment:
 
     # Display the current environment state for time milliseconds using matplotlib
     def display_state(self, time=50):
-        if(not self.visualized):
+        if not self.visualized:
             global plt
             global colors
             global sns
@@ -76,7 +83,7 @@ class Environment:
             _, self.ax = plt.subplots(1,1)
             plt.show(block=False)
             self.visualized = True
-        if(self.closed):
+        if self.closed:
             _, self.ax = plt.subplots(1,1)
             plt.show(block=False)
             self.closed = False
