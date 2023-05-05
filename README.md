@@ -88,6 +88,11 @@ We provide 2 ways to visualize a MinAtar environment.
 ### Using Environment.display_state()
 The Environment class includes a simple visualizer using matplotlib in the display_state function. To use this simply call:
 ```python
+env = Environment('breakout')
+env.display_state(50)
+```
+or, if you're using the gym interface:
+```python
 env = gym.make('Minatar/Breakout-v1')
 env.game.display_state(50)
 ```
@@ -96,7 +101,7 @@ The argument is the number of milliseconds to display the state before continuin
 env.game.close_display()
 ```
 This is the simplest way to visualize the environments, unless you need to handle user input during execution in which case you could use the provided GUI class.  
-You can also enable real-time rendering by making the environment in human render mode. In this case, the display_state function will be called automatically at every step:
+With the gym interface, you can also enable real-time rendering by making the environment in human render mode. In this case, the display_state function will be called automatically at every step:
 ```python
 env = gym.make('MinAtar/Breakout-v1', render_mode='human')
 env.reset()
