@@ -69,20 +69,26 @@ Use the arrow keys to move and space bar to fire. Press q to quit and r to reset
 Finally, we provide a simple implementations of DQN in `dqn.py` and online actor-critic with eligibility traces in `AC_lambda.py`.
 
 
-## OpenAI Gym Wrapper
-MinAtar is fully compatible with the latest OpenAI Gym version (0.26).
-A Gym environment can be constructed as follows:
+## Gymnasium Wrapper
+MinAtar is fully compatible with (Gymnasium)[https://gymnasium.farama.org/].
+A Gymnasium environment can be constructed as follows:
 ```python
 import gymnasium as gym
 env = gym.make('MinAtar/<game-id>')
 ````
-The following game IDs ara available: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1.  
+The following game IDs are available: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1.  
 For each game, in the v0 versions the action set has all 6 available actions (some of which are equivalent to no-op depending on the game),
 while in the v1 versions the action set is reduced to just the minimal actions for each game.  
 Note that the results included in this repo and the associated paper use the full action set of 6 actions.
 
-> If you want to use the old Gym API (without the `truncated` flag, and with the old `reset()` and `seed()` methods),
-install MinAtar 1.0.11 by running:
+> If you want to use the latest OpenAI Gym API (v0.26),
+install MinAtar v1.0.13 by running:
+```bash
+pip install minatar==1.0.13
+```
+
+> If you want to use old OpenAI Gym API (without the `truncated` flag, and with the old `reset()` and `seed()` methods),
+install MinAtar v1.0.11 by running:
 ```bash
 pip install minatar==1.0.11
 ```
