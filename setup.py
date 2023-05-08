@@ -25,7 +25,7 @@ entry_points = {
 
 setup(
     name='MinAtar',
-    version='1.0.12',
+    version='1.0.13',
     description='A miniaturized version of the Arcade Learning Environment.',
     url='https://github.com/kenjyoung/MinAtar',
     author='Kenny Young',

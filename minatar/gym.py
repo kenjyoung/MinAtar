@@ -4,20 +4,25 @@ import gym
 from gym import spaces
 from gym.envs import register
 
+try:
+    import seaborn as sns
+except:
+    import logging
+    logging.warning("Cannot import seaborn."
+        "Will not be able to train from pixel observations.")
+
 from minatar import Environment
 
 
 class BaseEnv(gym.Env):
     metadata = {"render_modes": ["human", "array", "rgb_array"]}
 
-    def __init__(self, game, display_time=50, use_minimal_action_set=False,
-                render_mode=None, **kwargs):
-        self.game_name = game
-        self.display_time = display_time
+    def __init__(self, game, render_mode=None, display_time=50,
+                use_minimal_action_set=False, **kwargs):
         self.render_mode = render_mode
+        self.display_time = display_time
 
-        self.game_kwargs = kwargs
-        self.seed()
+        self.game = Environment(env_name=game, **kwargs)
 
         if use_minimal_action_set:
             self.action_set = self.game.minimal_action_set()
@@ -36,25 +41,16 @@ class BaseEnv(gym.Env):
             self.render()
         return self.game.state(), reward, done, False, {}
 
+    def seed(self, seed=None):
+        self.game.seed(seed)
+
     def reset(self, seed=None, options=None):
-        if(seed is not None):
-            self.game = Environment(
-                env_name=self.game_name,
-                random_seed=seed,
-                **self.game_kwargs
-            )
+        if seed is not None:
+            self.seed(seed)
         self.game.reset()
         if self.render_mode == "human":
             self.render()
         return self.game.state(), {}
-
-    def seed(self, seed=None):
-        self.game = Environment(
-            env_name=self.game_name,
-            random_seed=seed,
-            **self.game_kwargs
-        )
-        return seed
 
     def render(self):
         if self.render_mode is None:
@@ -71,7 +67,6 @@ class BaseEnv(gym.Env):
         elif self.render_mode == "rgb_array": # use the same color palette of Environment.display_state
             state = self.game.state()
             n_channels = state.shape[-1]
-            sns = __import__('seaborn', globals(), locals())
             cmap = sns.color_palette("cubehelix", n_channels)
             cmap.insert(0, (0,0,0))
             numerical_state = np.amax(

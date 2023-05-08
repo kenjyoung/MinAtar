@@ -6,6 +6,14 @@
 from importlib import import_module
 import numpy as np
 
+try:
+    from matplotlib import pyplot as plt
+    from matplotlib import colors
+    import seaborn as sns
+except:
+    import logging
+    logging.warning("Cannot import matplotlib and/or seaborn."
+        "Will not be able to render the environment.")
 
 #####################################################################################################################
 # Environment
@@ -16,21 +24,26 @@ import numpy as np
 #####################################################################################################################
 class Environment:
     def __init__(self, env_name, sticky_action_prob=0.1,
-                difficulty_ramping=True, random_seed=None):
+                difficulty_ramping=True):
         env_module = import_module('minatar.environments.' + env_name)
-        self.random = np.random.RandomState(random_seed)
+        self.random = np.random.RandomState()
         self.env_name = env_name
-        self.env = env_module.Env(
-            ramping=difficulty_ramping, random_state=self.random)
+        self.env = env_module.Env(ramping=difficulty_ramping)
         self.n_channels = self.env.state_shape()[2]
         self.sticky_action_prob = sticky_action_prob
         self.last_action = 0
         self.visualized = False
         self.closed = False
 
+    # Seeding numpy random for reproducibility
+    def seed(self, seed=None):
+        if seed is not None:
+            self.random = np.random.RandomState(seed)
+            self.env.random = self.random
+
     # Wrapper for env.act
     def act(self, a):
-        if(self.random.rand() < self.sticky_action_prob):
+        if self.random.rand() < self.sticky_action_prob:
             a = self.last_action
         self.last_action = a
         return self.env.act(a)
@@ -61,15 +74,7 @@ class Environment:
 
     # Display the current environment state for time milliseconds using matplotlib
     def display_state(self, time=50):
-        if(not self.visualized):
-            global plt
-            global colors
-            global sns
-            mpl = __import__('matplotlib.pyplot', globals(), locals())
-            plt = mpl.pyplot
-            mpl = __import__('matplotlib.colors', globals(), locals())
-            colors = mpl.colors
-            sns = __import__('seaborn', globals(), locals())
+        if not self.visualized:
             self.cmap = sns.color_palette("cubehelix", self.n_channels)
             self.cmap.insert(0, (0,0,0))
             self.cmap = colors.ListedColormap(self.cmap)
@@ -78,7 +83,7 @@ class Environment:
             _, self.ax = plt.subplots(1,1)
             plt.show(block=False)
             self.visualized = True
-        if(self.closed):
+        if self.closed:
             _, self.ax = plt.subplots(1,1)
             plt.show(block=False)
             self.closed = False
