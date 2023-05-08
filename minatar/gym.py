@@ -11,13 +11,6 @@ except:
     logging.warning("Cannot import seaborn."
         "Will not be able to train from pixel observations.")
 
-try:
-    import seaborn as sns
-except:
-    import logging
-    logging.warning("Cannot import seaborn."
-        "Will not be able to train from pixel observations.")
-
 from minatar import Environment
 
 
