@@ -20,7 +20,7 @@ examples_requires = [
 ]
 
 entry_points = {
-    'gym.envs': ['MinAtar=minatar.gym:register_envs']
+    'gymnasium.envs': ['MinAtar=minatar.gym:register_envs']
 }
 
 setup(
