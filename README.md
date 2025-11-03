@@ -77,7 +77,7 @@ import minatar
 import gymnasium as gym
 minatar.register_envs()  # register MinAtar envs with gymnasium
 env = gym.make('MinAtar/<game-id>')
-````
+```
 The following game IDs are available: Asterix-v0, Breakout-v0, Freeway-v0, Seaquest-v0, SpaceInvaders-v0, Asterix-v1, Breakout-v1, Freeway-v1, Seaquest-v1, SpaceInvaders-v1.  
 For each game, in the v0 versions the action set has all 6 available actions (some of which are equivalent to no-op depending on the game),
 while in the v1 versions the action set is reduced to just the minimal actions for each game.  
