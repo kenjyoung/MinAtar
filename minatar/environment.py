@@ -54,7 +54,9 @@ class Environment:
 
     # Wrapper for env.reset
     def reset(self):
-        return self.env.reset()
+        result = self.env.reset()
+        self.last_action = 0
+        return result
 
     # Wrapper for env.state_shape
     def state_shape(self):
